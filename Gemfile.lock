@@ -1,0 +1,47 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    awesome_print (1.1.0)
+    beefcake (0.3.7)
+    coderay (1.0.9)
+    configatron (2.10.0)
+      yamler (>= 0.1.0)
+    diff-lcs (1.2.2)
+    logger (1.2.8)
+    method_source (0.8.1)
+    mtrc (0.0.4)
+    parallel (0.6.4)
+    pry (0.9.12)
+      coderay (~> 1.0.5)
+      method_source (~> 0.8)
+      slop (~> 3.4)
+    rake (10.0.4)
+    riemann-client (0.2.1)
+      beefcake (>= 0.3.5)
+      mtrc (>= 0.0.4)
+      trollop (>= 1.16.2)
+    rspec (2.13.0)
+      rspec-core (~> 2.13.0)
+      rspec-expectations (~> 2.13.0)
+      rspec-mocks (~> 2.13.0)
+    rspec-core (2.13.1)
+    rspec-expectations (2.13.0)
+      diff-lcs (>= 1.1.3, < 2.0)
+    rspec-mocks (2.13.0)
+    slop (3.4.3)
+    trollop (2.0)
+    yamler (0.1.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  awesome_print
+  configatron
+  logger
+  parallel
+  pry
+  rake
+  riemann-client
+  rspec
+  trollop

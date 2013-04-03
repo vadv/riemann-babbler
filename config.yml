@@ -1,0 +1,16 @@
+riemann:
+  host: riemann-testing-01.undev.cc
+  port: 5555
+  tags:
+    - prod
+    - nptv
+
+plugins:
+  dirs:
+    - /etc/riemann-babbler/plugins
+  dummy:
+    service: dummy service
+    interval: 1
+    states:
+      warning: 70
+      critical: 90

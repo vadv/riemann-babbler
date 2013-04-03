@@ -1,0 +1,66 @@
+#!/usr/bin/env ruby
+#encoding: utf-8
+
+require 'trollop'
+require 'yaml'
+require 'configatron'
+require 'parallel'
+require 'logger'
+
+require File.expand_path('../../lib/riemann/version', __FILE__)
+require File.expand_path('../../lib/deep_merge', __FILE__)
+require File.expand_path('../../lib/riemann/babbler/plugin', __FILE__)
+
+opts = Trollop::options do
+  version "Riemann babbler #{::Riemann::Babbler::VERSION}"
+  banner <<-EOS
+Riemann-babbler is plugin manager for riemann-tools.
+
+Usage:
+       riemann-babbler [options] 
+where [options] are:
+EOS
+
+  opt :config, "Config file", :default => "/etc/riemann-babbler/config.yml"
+end
+
+# logger
+log = Logger.new(STDOUT)
+
+# merge configs
+config_file =  if File.exist?( opts[:config] )
+  YAML.load_file( opts[:config] ).to_hash
+else
+  log.error "Can't load config file #{opts[:config]}"
+  Hash.new
+end
+
+config_default = YAML.load_file( File.expand_path('../../config.yml', __FILE__) )
+
+config = config_default.deep_merge( config_file )
+configatron.configure_from_hash config
+
+# отправляем к плагинам
+$configatron = configatron
+$logger = log
+
+# get plugins
+plugins = []
+default_plugins_dir = File.expand_path('../../lib/riemann/babbler/plugins/', __FILE__)
+Dir.glob( default_plugins_dir + "/*.rb" ) do |file|
+  plugins <<  file
+end
+
+unless configatron.plugins.dirs.nil?
+  configatron.plugins.dirs.each do |dir|
+    next unless Dir.exist? dir
+    Dir.glob( dir + "/*.rb" ) do |file|
+      plugins << file
+    end
+  end
+end
+
+# start plugins
+Parallel.each( plugins, :in_threads => plugins.count ) do |plugin|
+  require "#{plugin}"
+end
