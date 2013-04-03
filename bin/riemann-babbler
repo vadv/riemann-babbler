@@ -68,5 +68,5 @@ end
 
 # start plugins
 Parallel.each( plugins, :in_threads => plugins.count ) do |plugin|
-  require "#{plugin}"
+  require plugin
 end

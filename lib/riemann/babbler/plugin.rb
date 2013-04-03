@@ -1,3 +1,6 @@
+#encoding: utf-8
+
+# Базовое описание плагина
 module Riemann
   module Babbler
 
@@ -8,7 +11,6 @@ module Riemann
         def run
           new.run
         end
-
       end
     end
 
@@ -36,6 +38,7 @@ module Riemann
     def host
       hostname = `hostname`.chomp.downcase
       hostname += options.riemann.suffix unless options.riemann.suffix.nil?
+      hostname = options.riemann.prefix + hostname unless options.riemann.prefix.nil?
       hostname
     end
 
@@ -69,7 +72,7 @@ module Riemann
     def plugin
     end
 
-    # описание статуса
+    # хелпер, описание статуса
     def state(my_state)
       case
       when my_state.between?(plugin.states.warning, plugin.states.critical)

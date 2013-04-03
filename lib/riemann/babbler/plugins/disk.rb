@@ -14,7 +14,7 @@ class Riemann::Babbler::Disk
       x = f[4].to_f/100
       disk.merge!({f[5] => x})
     end
-    return disk
+    disk
   end
 
   def tick

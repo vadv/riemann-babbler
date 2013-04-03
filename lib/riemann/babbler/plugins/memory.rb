@@ -8,7 +8,6 @@ class Riemann::Babbler::Memory
   def memory
     m = File.read('/proc/meminfo').split(/\n/).inject({}) { |info, line|
       x = line.split(/:?\s+/)
-      # Assume kB...
       info[x[0]] = x[1].to_i
       info
     }
