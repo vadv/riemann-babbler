@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-require 'lib/riemann/version'
+require File.expand_path('../lib/riemann/version', __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "riemann-babbler"
