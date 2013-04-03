@@ -1,10 +1,9 @@
 # -*- encoding: utf-8 -*-
-$:.push File.expand_path("../lib", __FILE__)
-require 'riemann/version'
+require 'lib/riemann/version'
 
 Gem::Specification.new do |s|
   s.name        = "riemann-babbler"
-  s.version     = Riemann::Babbler::VERSION
+  s.version     = Babbler::VERSION
   s.authors     = ["Vasiliev D.V."]
   s.email       = %w(vadv.mkn@gmail.com)
   s.homepage    = "https://github.com/vadv/riemann-babbler"
