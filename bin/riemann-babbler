@@ -60,6 +60,12 @@ unless configatron.plugins.dirs.nil?
   end
 end
 
+unless configatron.plugins.files.nil?
+  configatron.plugins.files.each do |file|
+    plugins << file
+  end
+end
+
 # start plugins
 Parallel.each( plugins, :in_threads => plugins.count ) do |plugin|
   require "#{plugin}"

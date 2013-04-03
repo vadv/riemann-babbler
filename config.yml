@@ -1,16 +1,46 @@
 riemann:
-  host: riemann-testing-01.undev.cc
+  host: localhost
   port: 5555
-  tags:
-    - prod
-    - nptv
+
+logger:
+  level: DEBUG
 
 plugins:
-  dirs:
-    - /etc/riemann-babbler/plugins
-  dummy:
-    service: dummy service
+
+  babbler:
+    service: keep alive
+    interval: 1
+
+  la:
+    service: load avverage
     interval: 1
     states:
-      warning: 70
-      critical: 90
+      warning: 4
+      critical: 10
+
+  disk:
+    service: disk usage
+    interval: 1
+    states:
+      warning: 0.7
+      critical: 0.85
+
+  cpu:
+    service: cpu usage
+    interval: 1
+    states:
+      warning: 0.7
+      critical: 0.85
+
+  memory:
+    service: memory ussage
+    interval: 1
+    report_free: true
+    report_total: true
+    states:
+      warning: 0.6
+      critical: 0.8
+
+  net:
+    service: net ussage
+    interval: 1

@@ -27,8 +27,16 @@ module Riemann
     alias :opts :options
 
     def report(event)
-      event[:tags] unless options.riemann.tags.nil?
+      event[:tags] = options.riemann.tags unless options.riemann.tags.nil?
+      event[:host] =  host
+      log.debug "Report status: #{event.inspect}"
       riemann << event
+    end
+
+    def host
+      hostname = `hostname`.chomp.downcase
+      hostname += options.riemann.suffix unless options.riemann.suffix.nil?
+      hostname
     end
 
     def riemann
