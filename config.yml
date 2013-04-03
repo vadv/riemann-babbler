@@ -43,4 +43,4 @@ plugins:
 
   net:
     service: net ussage
-    interval: 1
+    interval: 5

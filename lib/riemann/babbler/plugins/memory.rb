@@ -28,12 +28,12 @@ class Riemann::Babbler::Memory
     })
     # постим сообщение о свобоной памяти
     report({
-      :service => plugin.service,
+      :service => plugin.service + " free",
       :metric => current_state[:free]
     }) if plugin.report_free
     # постим сообение о том сколько у нас вообще памяти
     report({
-      :service => plugin.service,
+      :service => plugin.service + " total",
       :metric => current_state[:total]
     }) if plugin.report_total
   end

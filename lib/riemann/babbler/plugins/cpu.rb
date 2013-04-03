@@ -18,14 +18,11 @@ class Riemann::Babbler::Cpu
     end
 
     @old_cpu = [u2, n2, s2, i2]
-    log.error fraction
     fraction
   end
 
   def tick
     current_state = cpu
-    # при первом проходе у нас будет nil
-    next unless current_state
     report({
       :service => plugin.service,
       :state => state(current_state),
