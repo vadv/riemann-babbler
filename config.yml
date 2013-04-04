@@ -12,14 +12,14 @@ plugins:
     interval: 1
 
   la:
-    service: load avverage
+    service: la_1
     interval: 1
     states:
       warning: 4
       critical: 10
 
   disk:
-    service: disk usage
+    service: disk
     interval: 1
     states:
       warning: 0.7
@@ -33,7 +33,7 @@ plugins:
       critical: 0.85
 
   memory:
-    service: memory ussage
+    service: memory
     interval: 1
     report_free: true
     report_total: true
@@ -42,5 +42,5 @@ plugins:
       critical: 0.8
 
   net:
-    service: net ussage
+    service: net
     interval: 5

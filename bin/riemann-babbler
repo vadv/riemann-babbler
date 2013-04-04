@@ -12,7 +12,7 @@ require File.expand_path('../../lib/deep_merge', __FILE__)
 require File.expand_path('../../lib/riemann/babbler/plugin', __FILE__)
 
 opts = Trollop::options do
-  version "Riemann babbler #{Babbler::VERSION}"
+  version "Riemann babbler #{Riemann::Babbler::VERSION}"
   banner <<-EOS
 Riemann-babbler is plugin manager for riemann-tools.
 

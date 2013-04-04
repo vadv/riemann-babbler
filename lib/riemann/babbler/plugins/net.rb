@@ -28,7 +28,7 @@ class Riemann::Babbler::Net
       if line =~ /\s*(\w+?):\s*([\s\d]+)\s*/
         iface = $1
         WORDS.map do |service|
-          "#{iface} #{service}"
+          "#{plugin.service} #{iface} #{service}"
         end.zip(
           $2.split(/\s+/).map { |str| str.to_i }
         ).each do |service, value|

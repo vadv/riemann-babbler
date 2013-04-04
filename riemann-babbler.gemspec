@@ -3,7 +3,7 @@ require File.expand_path('../lib/riemann/version', __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "riemann-babbler"
-  s.version     = Babbler::VERSION
+  s.version     = Riemann::Babbler::VERSION
   s.authors     = ["Vasiliev D.V."]
   s.email       = %w(vadv.mkn@gmail.com)
   s.homepage    = "https://github.com/vadv/riemann-babbler"

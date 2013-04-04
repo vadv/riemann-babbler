@@ -20,7 +20,7 @@ class Riemann::Babbler::Disk
   def tick
     disk.each do |point, free|
       report({
-        :service => plugin.service + " on #{point}",
+        :service => plugin.service + " #{point}",
         :state => state(free),
         :metric => free
       })
