@@ -12,7 +12,7 @@ plugins:
     interval: 1
 
   la:
-    service: la_1
+    service: load_average la1
     interval: 1
     states:
       warning: 4
