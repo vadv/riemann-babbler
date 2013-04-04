@@ -12,7 +12,8 @@ class Riemann::Babbler::Disk
       next unless f[0] =~ /^\//
       next if f[0] == 'Filesystem'
       x = f[4].to_f/100
-      disk.merge!({f[5] => x})
+      point = (f[5] == '/' ?  "/root" : f[5] )
+      disk.merge!({point => x})
     end
     disk
   end
