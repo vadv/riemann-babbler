@@ -25,7 +25,7 @@ riemann:
   tags: # таги которые будут сообшатся
     - prod
     - web
-  suffix: ".testing" # окончание `hostname`
+  suffix: ".testing" # окончание `hostname` в граффите как начало
 
 plugins:
   dirs:
