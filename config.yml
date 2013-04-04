@@ -3,7 +3,7 @@ riemann:
   port: 5555
 
 logger:
-  level: DEBUG
+  level: 2
 
 plugins:
 
