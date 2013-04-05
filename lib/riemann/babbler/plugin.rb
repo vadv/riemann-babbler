@@ -5,6 +5,8 @@ module Riemann
   module Babbler
 
     require 'riemann/client'
+    require 'open3'
+    require 'timeout'
 
     def self.included(base)
       base.instance_eval do
@@ -56,10 +58,10 @@ module Riemann
         begin
           tick
         rescue => e
+          #report({:service => plugin.service, :status => 'critical'})
           $stderr.puts "#{e.class} #{e}\n#{e.backtrace.join "\n"}"
         end
 
-        # Sleep.
         sleep(plugin.interval - ((Time.now - t0) % plugin.interval))
       end
     end
@@ -72,15 +74,42 @@ module Riemann
     def plugin
     end
 
+    # хэлпер для парса stdout+stderr и exit status
+    def shell(*cmd)
+      exit_status=nil
+      err=nil
+      out=nil
+      Timeout::timeout(5) {
+        Open3.popen3(*cmd) do |stdin, stdout, stderr, wait_thread|
+          err = stderr.gets(nil)
+          out = stdout.gets(nil)
+          [stdin, stdout, stderr].each{|stream| stream.send('close')}
+          exit_status = wait_thread.value
+        end
+      }
+      if exit_status.to_i > 0
+        err = err.chomp if err
+        raise err
+      elsif out
+        return out.chomp
+      else
+        return true
+      end
+    end
+
     # хелпер, описание статуса
     def state(my_state)
-      case
-      when my_state.between?(plugin.states.warning, plugin.states.critical)
-        'warning'
-      when my_state > plugin.states.warning
-        'critical'
+      unless plugin.states.warning.nil?
+        case
+        when my_state.between?(plugin.states.warning, plugin.states.critical)
+          'warning'
+        when my_state > plugin.states.warning
+          'critical'
+        else
+          'ok'
+        end
       else
-        'ok'
+        my_state >= plugin.states.critical ? 'critical' : 'ok'
       end
     end
 
