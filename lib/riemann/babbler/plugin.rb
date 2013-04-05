@@ -74,6 +74,12 @@ module Riemann
     def plugin
     end
 
+    def plugin_default(opts = {})
+      opts.each do |k,v|
+        plugin.set_default(k.to_sym, v)
+      end
+    end
+
     # хэлпер для парса stdout+stderr и exit status
     def shell(*cmd)
       exit_status=nil
