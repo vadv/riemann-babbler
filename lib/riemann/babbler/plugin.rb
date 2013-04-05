@@ -18,7 +18,7 @@ module Riemann
 
     def initialize
       @configatron = $configatron
-      super
+      init
     end
 
     def log
@@ -74,10 +74,8 @@ module Riemann
     def plugin
     end
 
-    def plugin_default(opts = {})
-      opts.each do |k,v|
-        plugin.set_default(k.to_sym, v)
-      end
+    # Plugin init
+    def init
     end
 
     # хэлпер для парса stdout+stderr и exit status
