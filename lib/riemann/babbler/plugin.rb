@@ -19,6 +19,7 @@ module Riemann
 
     def initialize
       @configatron = $configatron
+      @storage = Hash.new
       init
     end
 
@@ -36,6 +37,14 @@ module Riemann
       event[:host] =  host
       log.debug "Report status: #{event.inspect}"
       riemann << event
+    end
+
+    def report_with_diff(event)
+      current_metric = event[:metric]
+      event[:metric] = @storage[ event[:service] ] - current_metric if @storage.has_key? event[:service]
+      @storage[ event[:service] ] = current_metric
+      event[:state] = state(current_metric) unless plugin.states.critical.nil?
+      report(event)
     end
 
     def host
