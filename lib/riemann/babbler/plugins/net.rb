@@ -47,9 +47,10 @@ class Riemann::Babbler::Net
     status = net
     status.each_key do |service|
       #next if status[service] == 0
-      report_with_diff({
+      report({
         :service => service,
-        :metric => status[service]
+        :metric => status[service],
+        :is_diff => true
       })
     end
   end

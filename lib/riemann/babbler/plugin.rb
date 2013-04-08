@@ -33,6 +33,7 @@ module Riemann
     alias :opts :options
 
     def report(event)
+      report_with_diff(event) and return if event[:is_diff]
       event[:tags] = options.riemann.tags unless options.riemann.tags.nil?
       event[:host] =  host
       log.debug "Report status: #{event.inspect}"
@@ -44,6 +45,7 @@ module Riemann
       event[:metric] = current_metric - @storage[ event[:service] ] if @storage.has_key? event[:service]
       @storage[ event[:service] ] = current_metric
       event[:state] = state(current_metric) unless plugin.states.critical.nil?
+      event.delete(:is_diff)
       report(event)
     end
 
