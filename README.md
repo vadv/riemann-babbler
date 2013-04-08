@@ -87,11 +87,11 @@ class Riemann::Babbler::Awesomeplugin < Riemann::Babbler
     [
       {
         :service => plugin.service + " cmd1",
-        :metric => shell plugin.cmd2 #  - helper
+        :metric => shell plugin.cmd2 # shell - helper
       },
       {
         :service => plugin.service + " cmd2",
-        :metric => shell plugin.cmd2 #  - helper
+        :metric => shell plugin.cmd2 # shell - helper
       },
     ]
   end
