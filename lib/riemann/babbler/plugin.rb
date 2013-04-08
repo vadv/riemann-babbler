@@ -18,6 +18,7 @@ module Riemann
     require 'rest_client'
 
     attr_reader :logger
+    attr_reader :hostname
 
     def initialize( configatron, logger )
       @configatron = configatron
@@ -50,6 +51,10 @@ module Riemann
     end
 
     def host
+      @hostname ||= get_hostname
+    end
+
+    def get_hostname
       hostname = File.read('/proc/sys/kernel/hostname').strip.downcase
       hostname += options.riemann.suffix unless options.riemann.suffix.nil?
       hostname = options.riemann.prefix + hostname unless options.riemann.prefix.nil?
