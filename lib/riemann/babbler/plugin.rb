@@ -45,8 +45,8 @@ module Riemann
     end
 
     # не запускаем плагин есть 
-    def not_run_plugin
-      false
+    def run_plugin
+      true
     end
 
     def riemann
@@ -58,7 +58,8 @@ module Riemann
     alias :r :riemann
 
     def run
-      return 0 if not_run_plugin
+      # выйти если run_plugin не равен true
+      return 0 unless run_plugin == true
       t0 = Time.now
       loop do
         begin
