@@ -100,6 +100,14 @@ module Riemann
 
     # Переодически вызываемое действие
     def tick
+      posted_hash = hash_to_post
+      posted_hash.each_key do |service|
+        report({
+          :service => plugin.service + " " + service,
+          :metric => posted_hash[service],
+          :is_diff => posted_hash["is_diff"]
+        })
+      end
     end
 
     # Доступ к конфигу определенного плагина
