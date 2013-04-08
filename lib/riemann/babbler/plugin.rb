@@ -7,6 +7,7 @@ module Riemann
     require 'riemann/client'
     require 'open3'
     require 'timeout'
+    require 'rest_client'
 
     def self.included(base)
       base.instance_eval do

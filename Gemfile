@@ -6,6 +6,7 @@ gem "logger"
 gem "trollop"
 gem "parallel"
 gem "sys-filesystem"
+gem "rest-client"
 
 gem "rspec"
 gem "rake"
