@@ -22,37 +22,38 @@ class Riemann::Babbler::Net
   end
 
   def init
-    @diff = Hash.new
     @old_status = Hash.new
   end
 
   def net
     f = File.read('/proc/net/dev')
     status = Hash.new
-    f.split("\n").inject({}) do |s, line|
-      if line =~ /\s*(\w+?):\s*([\s\d]+)\s*/
-        iface = $1
-        WORDS.map do |service|
-          "#{plugin.service} #{iface} #{service}"
-        end.zip(
-          $2.split(/\s+/).map { |str| str.to_i }
-        ).each do |service, value|
-          status.merge!({service => value})
-        end
+    @diff = Hash.new
+    f.split("\n").each do |line|
+      iface = line.split(":")[0].strip
+      next unless line =~ /(\w*)\:\s*([\s\d]+)\s*/
+      WORDS.map do |service|
+        "#{plugin.service} #{iface} #{service}"
+      end.zip(
+        $2.split(/\s+/).map { |str| str.to_i }
+      ).each do |service, value|
+        status.merge!({service => value})
       end
     end
-    status.each_key { |key| @diff[key] = status[key] - @old_status[key] } unless @old_status.empty?
+    status.each_key { |key| @diff.merge!({key => status[key] - @old_status[key]}) } unless @old_status.empty?
     @old_status = status
     @diff
   end
 
   def tick
-    net.each do |service, value|
+    status = net
+    status.each_key do |service|
+      #next if status[service] == 0
       report({
         :service => service,
-        :metric => value
+        :metric => status[service]
       })
-    end unless net.nil?
+    end
   end
 
 end
