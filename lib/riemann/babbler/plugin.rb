@@ -21,6 +21,7 @@ module Riemann
       @configatron = $configatron
       @storage = Hash.new
       init
+      self.send run
     end
 
     def log
