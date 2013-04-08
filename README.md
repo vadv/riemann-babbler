@@ -1,9 +1,9 @@
-### Установка
+### Install
 ```
 gem install riemann-babbler
 ````
 
-### Использование
+### Use
 ```
 $ riemann-babbler --help
 Riemann-babbler is plugin manager for riemann-tools.
@@ -16,55 +16,51 @@ where [options] are:
   --help, -h:   Show this message
 ```
 
-### Описание конфига
-Bubbler имеет собственные конфиг, значения полученные через --config будут смерджены 
+### Config
+Bubbler load main config and merge custom plugins
 ```yaml
 riemann:
-  host: riemann.host # хост riemann куда слать сообщения
-  port: 5555 # порт
-  tags: # таги которые будут сообшатся
+  host: riemann.host 
+  port: 5555 
+  tags: 
     - prod
     - web
-  suffix: ".testing" # окончание `hostname` в графите как начало
+  suffix: ".testing"
+  preffix: "previx"
 
 plugins:
   dirs:
-    - /etc/riemann/plugins # загружает все плагины из указаной дирректории
+    - /etc/riemann/plugins # load all rb files in dirs
   files:
-    - /var/lib/riemann-plugins/test.rb # подгружает плагин по указаному пути
+    - /var/lib/riemann-plugins/test.rb # and custom load somefile
 ```
-##### Настройки конкретного плагина
+##### Config yml for custom plugin
 ```yaml
 plugins:
   awesome_plugin:
-  	service: some critical service # описание сервиса для поста на riemann
-  	interval: 1 # как часто дергать плагин (в сек)
+  	service: some critical service
+  	interval: 1 # (in sec)
   	states:
-  		warning: 80 # какой стейт давать плагину когда метрика перевалит за указанное значение
-  		critical: 90 # соответственно стейт critical
-  	some_parametr: "pgsql://username:password@database" # например необходимая настройка для плагина
+  		warning: 80
+  		critical: 90
+  	url: "http://127.0.0.1:11311/status"
 ```
 
-### Написание собственного плагина
+### Custom Plugin
 ```ruby
-class Riemann::Babbler::Awesomeplugin
-  include Riemann::Babbler
+class Riemann::Babbler::Awesomeplugin < Riemann::Babbler
 
-  # объявление неймспейса плагина
-  def plugin
-    options.plugins.awesome_plugin
+  def init
+    plugin.set_default(:service, 'awesome plugin' )
+    plugin.set_default(:interval, 1 )
+    plugin.set_default(:url, 'http://127.0.0.1:11311/status')
   end
-
-  # то что будет вызыватся таймером по указаному interval
-  def tick
-    status = {
+  def collect
+    {
       :service => plugin.service,
-      :state => 'ok'
+      :metric => rest_get url # rest_get - helper
     }
-    report status
   end
 
 end
-# обязательный вызов
-Riemann::Babbler::Awesomeplugin.run
 ```
