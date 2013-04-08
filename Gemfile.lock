@@ -12,6 +12,7 @@ GEM
     method_source (0.8.1)
     mime-types (1.21)
     mtrc (0.0.4)
+    parallel (0.6.4)
     pry (0.9.12)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
@@ -44,6 +45,7 @@ DEPENDENCIES
   awesome_print
   configatron
   logger
+  parallel
   pry
   rake
   rest-client
