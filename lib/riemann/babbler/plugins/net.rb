@@ -41,7 +41,7 @@ class Riemann::Babbler::Net
         end
       end
     end
-    status.each_key { |key| @diff[key] = status[key] - @old_status[key] } if @old_status
+    status.each_key { |key| @diff[key] = status[key] - @old_status[key] } unless @old_status.empty?
     @old_status = status
     @diff
   end

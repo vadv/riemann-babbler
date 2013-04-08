@@ -9,7 +9,8 @@ class Riemann::Babbler::Disk
     'nfs',
     'devpts',
     'squashfs',
-    'proc'
+    'proc',
+    'devtmpfs'
   ]
 
   def plugin
@@ -29,6 +30,8 @@ class Riemann::Babbler::Disk
     monit_points.each do |point|
       point_stat = Filesystem.stat point
       human_point = point == "/" ? "/root" : point
+      human_point.gsub!(/^\//, "")
+      human_point.gsub!(/\//, "_")
       disk.merge!({human_point + " block" => 1 - point_stat.blocks_available.to_f/point_stat.blocks})
       disk.merge!({human_point + " inode" => 1 - point_stat.files_available.to_f/point_stat.files})
     end
