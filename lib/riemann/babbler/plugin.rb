@@ -61,6 +61,19 @@ module Riemann
       true
     end
 
+    # http rest 
+    def rest_get(url)
+      begin
+        RestClient.get url
+      rescue
+        report({
+          :service => plugin.service,
+          :state => 'critical',
+          :description => "Response from #{url}"
+        })
+      end
+    end
+
     def riemann
       @riemann ||= Riemann::Client.new(
         :host => options.riemann.host,
