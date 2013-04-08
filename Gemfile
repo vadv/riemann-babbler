@@ -4,7 +4,6 @@ gem "riemann-client"
 gem "configatron"
 gem "logger"
 gem "trollop"
-gem "parallel"
 gem "sys-filesystem"
 gem "rest-client"
 

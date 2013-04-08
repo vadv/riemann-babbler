@@ -4,7 +4,6 @@
 require 'trollop'
 require 'yaml'
 require 'configatron'
-require 'parallel'
 require 'logger'
 
 require File.expand_path('../../lib/riemann/version', __FILE__)
