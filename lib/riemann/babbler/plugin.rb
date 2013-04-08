@@ -44,6 +44,11 @@ module Riemann
       hostname
     end
 
+    # не запускаем плагин есть 
+    def not_run_plugin
+      false
+    end
+
     def riemann
       @riemann ||= Riemann::Client.new(
         :host => options.riemann.host,
@@ -53,6 +58,7 @@ module Riemann
     alias :r :riemann
 
     def run
+      return 0 if not_run_plugin
       t0 = Time.now
       loop do
         begin
