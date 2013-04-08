@@ -104,7 +104,7 @@ module Riemann
 
     # Переодически вызываемое действие
     def tick
-      posted_hash = hash_to_post
+      posted_hash = collect
       posted_hash.each_key do |service|
         case service
         when Hash

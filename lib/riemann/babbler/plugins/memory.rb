@@ -1,10 +1,6 @@
 class Riemann::Babbler::Memory
   include Riemann::Babbler
 
-  def plugin
-    options.plugins.memory
-  end
-
   def memory
     m = File.read('/proc/meminfo').split(/\n/).inject({}) { |info, line|
       x = line.split(/:?\s+/)
@@ -38,5 +34,3 @@ class Riemann::Babbler::Memory
   end
 
 end
-
-Riemann::Babbler::Memory.run

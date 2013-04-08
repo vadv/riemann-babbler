@@ -1,11 +1,7 @@
 class Riemann::Babbler::Cpu
   include Riemann::Babbler
 
-  def plugin
-    options.plugins.cpu
-  end
-
-  def cpu
+  def collect
     cpu = File.read('/proc/stat')
     cpu[/cpu\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/]
     u2, n2, s2, i2 = [$1, $2, $3, $4].map { |e| e.to_i }
@@ -18,18 +14,7 @@ class Riemann::Babbler::Cpu
     end
 
     @old_cpu = [u2, n2, s2, i2]
-    fraction
-  end
-
-  def tick
-    current_state = cpu
-    report({
-      :service => plugin.service,
-      :state => state(current_state),
-      :metric => current_state
-    })
+    {"cpu" => fraction}
   end
 
 end
-
-Riemann::Babbler::Cpu.run
