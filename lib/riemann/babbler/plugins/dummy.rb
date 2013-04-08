@@ -1,8 +1,8 @@
-class Riemann::Babbler::Dummy
-  include Riemann::Babbler
+class Riemann::Babbler::Dummy < Riemann::Babbler
 
   def collect
     {
+      :service => plugin.service,
       :state => 'ok'
     }
   end

@@ -2,30 +2,29 @@
 
 # Базовое описание плагина
 module Riemann
-  module Babbler
+  class Babbler
+
+    def self.registered_plugins
+      @plugins ||= []
+    end
+
+    def self.inherited( klass )
+      registered_plugins << klass
+    end
 
     require 'riemann/client'
     require 'open3'
     require 'timeout'
     require 'rest_client'
 
-    def self.included(base)
-      base.instance_eval do
-        def run
-          new.run
-        end
-      end
-    end
+    attr_reader :logger
 
-    def initialize
-      @configatron = $configatron
+    def initialize( configatron, logger )
+      @configatron = configatron
+      @logger = logger
       @storage = Hash.new
       init
       run
-    end
-
-    def log
-      @logger ||= $logger
     end
 
     def options
@@ -40,7 +39,7 @@ module Riemann
       end
       event[:tags] = options.riemann.tags unless options.riemann.tags.nil?
       event[:host] =  host
-      log.debug "Report status: #{event.inspect}"
+      logger.debug "Report status: #{event.inspect}"
       riemann << event
     end
 
@@ -106,19 +105,10 @@ module Riemann
     def tick
       posted_hash = collect
       posted_hash.each_key do |service|
-        case service
-        when Hash
-          report({
-            :service => plugin.service + " " + service,
-            :metric => posted_hash[service],
-            :is_diff => posted_hash[:is_diff]
-          })
-        else
-          report({
-            :service => plugin.service + " " + service,
-            :metric => posted_hash[service]           
-            })
-        end
+        report({
+          :service => service,
+          :metric => posted_hash[service][:metric]
+        })
       end
     end
 

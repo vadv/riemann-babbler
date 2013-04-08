@@ -1,5 +1,4 @@
-class Riemann::Babbler::La
-  include Riemann::Babbler
+class Riemann::Babbler::La < Riemann::Babbler
 
   def collect
   { 

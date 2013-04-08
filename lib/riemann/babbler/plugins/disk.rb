@@ -1,5 +1,4 @@
-class Riemann::Babbler::Disk
-  include Riemann::Babbler
+class Riemann::Babbler::Disk < Riemann::Babbler
 
   require 'sys/filesystem'
   include Sys
@@ -49,5 +48,3 @@ class Riemann::Babbler::Disk
   end
 
 end
-
-Riemann::Babbler::Disk.run

@@ -1,5 +1,4 @@
-class Riemann::Babbler::Memory
-  include Riemann::Babbler
+class Riemann::Babbler::Memory < Riemann::Babbler
 
   def memory
     m = File.read('/proc/meminfo').split(/\n/).inject({}) { |info, line|

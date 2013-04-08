@@ -25,7 +25,7 @@ EOS
 end
 
 # logger
-log = Logger.new(STDOUT)
+logger = Logger.new(STDOUT)
 
 # merge configs
 config_file =  if File.exist?( opts[:config] )
@@ -39,10 +39,6 @@ config_default = YAML.load_file( File.expand_path('../../config.yml', __FILE__) 
 
 config = config_default.deep_merge( config_file )
 configatron.configure_from_hash config
-
-# отправляем к плагинам
-$configatron = configatron
-$logger = log
 
 # get plugins
 plugins = []
@@ -67,6 +63,16 @@ unless configatron.plugins.files.nil?
 end
 
 # start plugins
-Parallel.each( plugins, :in_threads => plugins.count ) do |plugin|
-  require plugin
+plugins.each { |plugin| require plugin }
+
+plugin_threads = Riemann::Babbler.registered_plugins.map do |plugin|
+  Thread.new {
+    plugin.new( configatron, logger ).run
+  }
 end
+
+Signal.trap "USR1" do
+  plugin_threads.each( &:kill )
+end
+
+plugin_threads.each( &:join )

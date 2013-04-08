@@ -1,23 +1,30 @@
-class Riemann::Babbler::Net
-  include Riemann::Babbler
+class Riemann::Babbler::Net < Riemann::Babbler
 
   WORDS = ['rx bytes',
-    'rx packets',
-    'rx errs',
-    'rx drop',
-    'rx fifo',
-    'rx frame',
-    'rx compressed',
-    'rx multicast',
-    'tx bytes',
-    'tx packets',
-    'tx drops',
-    'tx fifo',
-    'tx colls',
-    'tx carrier',
-    'tx compressed']
+           'rx packets',
+           'rx errs',
+           'rx drop',
+           'rx fifo',
+           'rx frame',
+           'rx compressed',
+           'rx multicast',
+           'tx bytes',
+           'tx packets',
+           'tx drops',
+           'tx fifo',
+           'tx colls',
+           'tx carrier',
+           'tx compressed']
 
-  def collect
+  def plugin
+    options.plugins.net
+  end
+
+  def init
+    @old_status = Hash.new
+  end
+
+  def net
     f = File.read('/proc/net/dev')
     status = Hash.new
     f.split("\n").each do |line|
@@ -35,5 +42,16 @@ class Riemann::Babbler::Net
     status
   end
 
-end
+  def tick
+    status = net
+    status.each_key do |service|
+      #next if status[service] == 0
+      report({
+        :service => service,
+        :metric => status[service],
+        :is_diff => true
+      })
+    end
+  end
 
+end

@@ -1,5 +1,4 @@
-class Riemann::Babbler::Cpu
-  include Riemann::Babbler
+class Riemann::Babbler::Cpu < Riemann::Babbler
 
   def collect
     cpu = File.read('/proc/stat')
