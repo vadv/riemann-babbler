@@ -28,10 +28,24 @@ module Riemann
       run
     end
 
+    # Доступ к конфигу определенного плагина
+    def plugin
+      plugin_name = self.class.name.split( "::" ).last.gsub( /(\p{Lower})(\p{Upper})/, "\\1_\\2" ).downcase
+      options.plugins.send plugin_name
+    end
+
     def options
       @configatron
     end
     alias :opts :options
+
+    def riemann
+      @riemann ||= Riemann::Client.new(
+        :host => options.riemann.host,
+        :port => options.riemann.port
+      )
+    end
+    alias :r :riemann
 
     def report(event)
       report_with_diff(event) and return if event[:as_diff]
@@ -66,26 +80,16 @@ module Riemann
       true
     end
 
-    # http rest 
-    def rest_get(url)
-      begin
-        RestClient.get url
-      rescue
-        report({
-          :service => plugin.service,
-          :state => 'critical',
-          :description => "Response from #{url}"
-        })
-      end
+    # Переодически вызываемое действие
+    def tick
+      posted_array = collect
+      posted_array = posted_array.class == Array ? posted_array : [ posted_array ]
+      posted_array.each { |event| report event }
     end
 
-    def riemann
-      @riemann ||= Riemann::Client.new(
-        :host => options.riemann.host,
-        :port => options.riemann.port
-      )
+    # Plugin init
+    def init
     end
-    alias :r :riemann
 
     def run
       # выйти если run_plugin не равен true
@@ -102,21 +106,20 @@ module Riemann
       end
     end
 
-    # Переодически вызываемое действие
-    def tick
-      posted_array = collect
-      posted_array = posted_array.class == Array ? posted_array : [ posted_array ]
-      posted_array.each { |event| report event }
-    end
-
-    # Доступ к конфигу определенного плагина
-    def plugin
-      plugin_name = self.class.name.split( "::" ).last.gsub( /(\p{Lower})(\p{Upper})/, "\\1_\\2" ).downcase
-      options.plugins.send plugin_name
-    end
-
-    # Plugin init
-    def init
+    # хелпер, описание статуса
+    def state(my_state)
+      unless plugin.states.warning.nil?
+        case
+        when my_state.between?(plugin.states.warning, plugin.states.critical)
+          'warning'
+        when my_state > plugin.states.warning
+          'critical'
+        else
+          'ok'
+        end
+      else
+        my_state >= plugin.states.critical ? 'critical' : 'ok'
+      end
     end
 
     # хэлпер для парса stdout+stderr и exit status
@@ -142,19 +145,16 @@ module Riemann
       end
     end
 
-    # хелпер, описание статуса
-    def state(my_state)
-      unless plugin.states.warning.nil?
-        case
-        when my_state.between?(plugin.states.warning, plugin.states.critical)
-          'warning'
-        when my_state > plugin.states.warning
-          'critical'
-        else
-          'ok'
-        end
-      else
-        my_state >= plugin.states.critical ? 'critical' : 'ok'
+    # http rest 
+    def rest_get(url)
+      begin
+        RestClient.get url
+      rescue
+        report({
+          :service => plugin.service,
+          :state => 'critical',
+          :description => "Response from #{url}"
+        })
       end
     end
 
