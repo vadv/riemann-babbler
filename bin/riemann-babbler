@@ -30,7 +30,7 @@ logger = Logger.new(STDOUT)
 config_file =  if File.exist?( opts[:config] )
   YAML.load_file( opts[:config] ).to_hash
 else
-  log.error "Can't load config file #{opts[:config]}"
+  logger.error "Can't load config file #{opts[:config]}"
   Hash.new
 end
 
@@ -70,7 +70,7 @@ plugin_threads = Riemann::Babbler.registered_plugins.map do |plugin|
   }
 end
 
-Signal.trap "USR1" do
+Signal.trap "USR2" do # перехватываем сообщение (на будущее)
   plugin_threads.each( &:kill )
 end
 

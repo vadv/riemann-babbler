@@ -84,16 +84,17 @@ class Riemann::Babbler::Awesomeplugin < Riemann::Babbler
   end
 
   def collect # may return Array
-    [
-      {
+    status = []
+    status << {
         :service => plugin.service + " cmd1",
         :metric => shell plugin.cmd2 # shell - helper
-      },
-      {
+        }
+    status <<  {
         :service => plugin.service + " cmd2",
-        :metric => shell plugin.cmd2 # shell - helper
-      },
-    ]
+        :metric => shell plugin.cmd2, # shell - helper
+        :as_diff => true # report as diffencial: current - last
+      }
+    status
   end
 end
 ```
