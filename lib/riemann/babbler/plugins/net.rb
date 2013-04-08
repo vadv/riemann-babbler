@@ -31,6 +31,7 @@ class Riemann::Babbler::Net
     @diff = Hash.new
     f.split("\n").each do |line|
       iface = line.split(":")[0].strip
+      iface.gsub!(/\./,"_")
       next unless line =~ /(\w*)\:\s*([\s\d]+)\s*/
       WORDS.map do |service|
         "#{plugin.service} #{iface} #{service}"
