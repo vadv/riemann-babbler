@@ -28,7 +28,6 @@ class Riemann::Babbler::Net
   def net
     f = File.read('/proc/net/dev')
     status = Hash.new
-    @diff = Hash.new
     f.split("\n").each do |line|
       iface = line.split(":")[0].strip
       iface.gsub!(/\./,"_")
@@ -41,16 +40,14 @@ class Riemann::Babbler::Net
         status.merge!({service => value})
       end
     end
-    status.each_key { |key| @diff.merge!({key => status[key] - @old_status[key]}) } unless @old_status.empty?
-    @old_status = status
-    @diff
+    status
   end
 
   def tick
     status = net
     status.each_key do |service|
       #next if status[service] == 0
-      report({
+      report_with_diff({
         :service => service,
         :metric => status[service]
       })
