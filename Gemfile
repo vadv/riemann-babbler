@@ -5,6 +5,7 @@ gem "configatron"
 gem "logger"
 gem "trollop"
 gem "parallel"
+gem "sys-filesystem"
 
 gem "rspec"
 gem "rake"

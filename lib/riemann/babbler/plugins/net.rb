@@ -2,23 +2,28 @@ class Riemann::Babbler::Net
   include Riemann::Babbler
 
   WORDS = ['rx bytes',
-   'rx packets',
-   'rx errs',
-   'rx drop',
-   'rx fifo',
-   'rx frame',
-   'rx compressed',
-   'rx multicast',
-   'tx bytes',
-   'tx packets',
-   'tx drops',
-   'tx fifo',
-   'tx colls',
-   'tx carrier',
-   'tx compressed']
+           'rx packets',
+           'rx errs',
+           'rx drop',
+           'rx fifo',
+           'rx frame',
+           'rx compressed',
+           'rx multicast',
+           'tx bytes',
+           'tx packets',
+           'tx drops',
+           'tx fifo',
+           'tx colls',
+           'tx carrier',
+           'tx compressed']
 
   def plugin
     options.plugins.net
+  end
+
+  def init
+    @diff = Hash.new
+    @old_status = Hash.new
   end
 
   def net
@@ -36,16 +41,18 @@ class Riemann::Babbler::Net
         end
       end
     end
-    return status
+    status.each_key { |key| @diff[key] = status[key] - @old_status[key] } if @old_status
+    @old_status = status
+    @diff
   end
 
   def tick
     net.each do |service, value|
-    report({
-      :service => service,
-      :metric => value
-    })
-    end
+      report({
+        :service => service,
+        :metric => value
+      })
+    end unless net.nil?
   end
 
 end

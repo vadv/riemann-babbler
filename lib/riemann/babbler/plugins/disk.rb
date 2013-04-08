@@ -1,19 +1,35 @@
 class Riemann::Babbler::Disk
   include Riemann::Babbler
 
+  require 'sys/filesystem'
+  include Sys
+
+  NOT_MONITORING_FS = [
+    'sysfs',
+    'nfs',
+    'devpts',
+    'squashfs',
+    'proc'
+  ]
+
   def plugin
     options.plugins.disk
   end
 
   def disk
-    disk = {}
-    `df -P`.split(/\n/).each do |r|
-      f = r.split(/\s+/)
-      next unless f[0] =~ /^\//
-      next if f[0] == 'Filesystem'
-      x = f[4].to_f/100
-      point = (f[5] == '/' ?  "/root" : f[5] )
-      disk.merge!({point => x})
+    # собираем только необходимые для мониторинга маунт-поинты
+    # точнее выбираем из mounts только те, у которых fstype не попадает
+    # в NOT_MONITORING_FS
+    monit_points = [] 
+    File.read('/proc/mounts').split("\n").each do |line|
+      mtab = line.split(/\s+/)
+      monit_points << mtab[1] unless NOT_MONITORING_FS.include? mtab[2] 
+    end
+    disk = Hash.new
+    monit_points.each do |point|
+      point_stat = Filesystem.stat point
+      disk.merge!({point + " storage" => (point_stat.blocks_free/point_stat.blocks_available)})
+      disk.merge!({point + " inode" => (point_stat.files_free/point_stat.files_available)})
     end
     disk
   end

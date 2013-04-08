@@ -11,13 +11,13 @@ Riemann-babbler is plugin manager for riemann-tools.
 Usage:
        riemann-babbler [options]
 where [options] are:
-  --config, -c <s>:   Config file (default: /etc/riemann-babbler/config.yml)
+  --config, -c:   Config file (default: /etc/riemann-babbler/config.yml)
   --version, -v:   Print version and exit
   --help, -h:   Show this message
 ```
 
 ### Описание конфига
-Bubbler имеет собственные конифиги, значения полученные через --config будут смерджены 
+Bubbler имеет собственные конфиг, значения полученные через --config будут смерджены 
 ```yaml
 riemann:
   host: riemann.host # хост riemann куда слать сообщения
@@ -25,7 +25,7 @@ riemann:
   tags: # таги которые будут сообшатся
     - prod
     - web
-  suffix: ".testing" # окончание `hostname` в граффите как начало
+  suffix: ".testing" # окончание `hostname` в графите как начало
 
 plugins:
   dirs:
