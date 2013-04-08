@@ -50,7 +50,7 @@ module Riemann
     end
 
     def host
-      hostname = `hostname`.chomp.downcase
+      hostname = File.read('/proc/sys/kernel/hostname').strip.downcase
       hostname += options.riemann.suffix unless options.riemann.suffix.nil?
       hostname = options.riemann.prefix + hostname unless options.riemann.prefix.nil?
       hostname
