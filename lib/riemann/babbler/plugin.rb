@@ -123,6 +123,8 @@ module Riemann
 
     # Доступ к конфигу определенного плагина
     def plugin
+      plugin_name = self.class.name.split( "::" ).last.gsub( /(\p{Lower})(\p{Upper})/, "\\1_\\2" ).downcase
+      options.plugins.send plugin_name
     end
 
     # Plugin init
