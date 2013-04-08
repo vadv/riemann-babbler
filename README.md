@@ -55,12 +55,44 @@ class Riemann::Babbler::Awesomeplugin < Riemann::Babbler
     plugin.set_default(:interval, 1 )
     plugin.set_default(:url, 'http://127.0.0.1:11311/status')
   end
+
   def collect
+    state = rest_get plugin.url == "OK" ? 'ok' : 'critical' # rest_get - helper
     {
       :service => plugin.service,
-      :metric => rest_get url # rest_get - helper
+      :state => state
     }
   end
+end
+```
+### Or
+```ruby
+class Riemann::Babbler::Awesomeplugin < Riemann::Babbler
 
+  def init
+    plugin.set_default(:service, 'awesome plugin' )
+    plugin.set_default(:interval, 1 )
+    plugin.states.set_default(:warning, 5)
+    plugin.states.set_default(:critical, 20)
+    plugin.set_default(:cmd1, 'cat /file/status | grep somevalue')
+    plugin.set_default(:cmd2, 'cat /file/status | grep somevalue2')
+  end
+
+  def run_plugin # run plugin if
+    File.exists? '/file/status'
+  end
+
+  def collect # may return Array
+    [
+      {
+        :service => plugin.service + " cmd1",
+        :metric => shell plugin.cmd2 #  - helper
+      },
+      {
+        :service => plugin.service + " cmd2",
+        :metric => shell plugin.cmd2 #  - helper
+      },
+    ]
+  end
 end
 ```
