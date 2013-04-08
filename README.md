@@ -47,6 +47,7 @@ plugins:
 ```
 
 ### Custom Plugin
+#### Example 1
 ```ruby
 class Riemann::Babbler::Awesomeplugin < Riemann::Babbler
 
@@ -65,7 +66,7 @@ class Riemann::Babbler::Awesomeplugin < Riemann::Babbler
   end
 end
 ```
-### Or
+#### Example 2
 ```ruby
 class Riemann::Babbler::Awesomeplugin < Riemann::Babbler
 
