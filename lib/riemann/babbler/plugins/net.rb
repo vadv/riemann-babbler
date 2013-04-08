@@ -16,17 +16,9 @@ class Riemann::Babbler::Net < Riemann::Babbler
            'tx carrier',
            'tx compressed']
 
-  def plugin
-    options.plugins.net
-  end
-
-  def init
-    @old_status = Hash.new
-  end
-
-  def net
+  def collect
     f = File.read('/proc/net/dev')
-    status = Hash.new
+    status = Array.new
     f.split("\n").each do |line|
       iface = line.split(":")[0].strip
       iface.gsub!(/\./,"_")
@@ -36,22 +28,10 @@ class Riemann::Babbler::Net < Riemann::Babbler
       end.zip(
         $2.split(/\s+/).map { |str| str.to_i }
       ).each do |service, value|
-        status.merge!({service => value})
+        status << { :service => service, :metric => value, :is_diff => true }
       end
     end
     status
-  end
-
-  def tick
-    status = net
-    status.each_key do |service|
-      #next if status[service] == 0
-      report({
-        :service => service,
-        :metric => status[service],
-        :is_diff => true
-      })
-    end
   end
 
 end

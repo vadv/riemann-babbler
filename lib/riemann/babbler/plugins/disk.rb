@@ -12,11 +12,7 @@ class Riemann::Babbler::Disk < Riemann::Babbler
     'devtmpfs'
   ]
 
-  def plugin
-    options.plugins.disk
-  end
-
-  def disk
+  def collect
     # собираем только необходимые для мониторинга маунт-поинты
     # точнее выбираем из mounts только те, у которых fstype не попадает
     # в NOT_MONITORING_FS
@@ -25,26 +21,15 @@ class Riemann::Babbler::Disk < Riemann::Babbler
       mtab = line.split(/\s+/)
       monit_points << mtab[1] unless NOT_MONITORING_FS.include? mtab[2] 
     end
-    disk = Hash.new
+    disk = Array.new
     monit_points.each do |point|
       point_stat = Filesystem.stat point
       human_point = point == "/" ? "/root" : point
-      human_point.gsub!(/^\//, "")
-      human_point.gsub!(/\//, "_")
-      disk.merge!({human_point + " block" => 1 - point_stat.blocks_available.to_f/point_stat.blocks})
-      disk.merge!({human_point + " inode" => 1 - point_stat.files_available.to_f/point_stat.files})
+      human_point.gsub!(/^\//, "").gsub!(/\//, "_")
+      disk << { :service => human_point + " block", :metric => 1 - point_stat.blocks_available.to_f/point_stat.blocks }
+      disk << { :service => human_point + " inode", :metric => 1 - point_stat.files_available.to_f/point_stat.files }
     end
     disk
-  end
-
-  def tick
-    disk.each do |point, free|
-      report({
-        :service => plugin.service + " #{point}",
-        :state => state(free),
-        :metric => free
-      })
-    end
   end
 
 end

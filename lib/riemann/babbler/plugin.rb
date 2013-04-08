@@ -33,10 +33,8 @@ module Riemann
     alias :opts :options
 
     def report(event)
-      case event[:metric]
-        when Hash
-          report_with_diff(event) and return
-      end
+      report_with_diff(event) and return if event[:is_diff]
+      event[:state] = state(event[:metric]) unless plugin.states.critical.nil?
       event[:tags] = options.riemann.tags unless options.riemann.tags.nil?
       event[:host] =  host
       logger.debug "Report status: #{event.inspect}"
@@ -44,11 +42,10 @@ module Riemann
     end
 
     def report_with_diff(event)
-      current_metric = event[:metric][:value]
-      event[:metric][:value] = current_metric - @storage[ event[:service] ] if @storage.has_key? event[:service]
+      current_metric = event[:metric]
+      event[:metric] = current_metric - @storage[ event[:service] ] if @storage.has_key? event[:service]
       @storage[ event[:service] ] = current_metric
-      event[:state] = state(current_metric) unless plugin.states.critical.nil?
-      event[:metric] = event[:metric][:value]
+      event.delete(:is_diff)
       report(event)
     end
 
@@ -93,8 +90,7 @@ module Riemann
         begin
           tick
         rescue => e
-          #report({:service => plugin.service, :status => 'critical'})
-          $stderr.puts "#{e.class} #{e}\n#{e.backtrace.join "\n"}"
+          logger.error "Plugin #{self.class.name} : #{e.class} #{e}\n#{e.backtrace.join "\n"}"
         end
 
         sleep(plugin.interval - ((Time.now - t0) % plugin.interval))
@@ -103,13 +99,9 @@ module Riemann
 
     # Переодически вызываемое действие
     def tick
-      posted_hash = collect
-      posted_hash.each_key do |service|
-        report({
-          :service => service,
-          :metric => posted_hash[service][:metric]
-        })
-      end
+      posted_array = collect
+      posted_array = posted_array.class == Array ? posted_array : [ posted_array ]
+      posted_array.each { |event| report event }
     end
 
     # Доступ к конфигу определенного плагина
