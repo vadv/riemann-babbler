@@ -5,7 +5,6 @@ require 'trollop'
 require 'yaml'
 require 'configatron'
 require 'logger'
-require 'parallel'
 
 require File.expand_path('../../lib/riemann/version', __FILE__)
 require File.expand_path('../../lib/deep_merge', __FILE__)
@@ -65,7 +64,14 @@ end
 # start plugins
 plugins.each { |plugin| require plugin }
 
-riemann_plugins = Riemann::Babbler.registered_plugins
-Parallel.each( riemann_plugins, :in_threads => riemann_plugins.count ) do |plugin|
-  plugin.new( configatron, logger ).run
+plugin_threads = Riemann::Babbler.registered_plugins.map do |plugin|
+  Thread.new {
+    plugin.new( configatron, logger ).run
+  }
 end
+
+Signal.trap "USR1" do
+  plugin_threads.each( &:kill )
+end
+
+plugin_threads.each( &:join )
