@@ -41,7 +41,7 @@ module Riemann
 
     def report_with_diff(event)
       current_metric = event[:metric]
-      event[:metric] = @storage[ event[:service] ] - current_metric if @storage.has_key? event[:service]
+      event[:metric] = current_metric - @storage[ event[:service] ] if @storage.has_key? event[:service]
       @storage[ event[:service] ] = current_metric
       event[:state] = state(current_metric) unless plugin.states.critical.nil?
       report(event)
