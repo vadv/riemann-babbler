@@ -41,8 +41,8 @@ module Riemann
     end
 
     def report_with_diff(event)
-      current_metric = event[:metric]
-      event[:metric] = current_metric - @storage[ event[:service] ] if @storage.has_key? event[:service]
+      current_metric = event[:metric][:value]
+      event[:metric][:value] = current_metric - @storage[ event[:service] ] if @storage.has_key? event[:service]
       @storage[ event[:service] ] = current_metric
       event[:state] = state(current_metric) unless plugin.states.critical.nil?
       event.delete(:is_diff)
@@ -102,11 +102,19 @@ module Riemann
     def tick
       posted_hash = hash_to_post
       posted_hash.each_key do |service|
-        report({
-          :service => plugin.service + " " + service,
-          :metric => posted_hash[service],
-          :is_diff => posted_hash["is_diff"]
-        })
+        case service
+        when Hash
+          report({
+            :service => plugin.service + " " + service,
+            :metric => posted_hash[service],
+            :is_diff => posted_hash[:is_diff]
+          })
+        else
+          report({
+            :service => plugin.service + " " + service,
+            :metric => posted_hash[service]           
+            })
+        end
       end
     end
 

@@ -47,10 +47,10 @@ plugins:
 
 ### Написание собственного плагина
 ```ruby
-class Riemann::Babbler::Awesomeplugins
+class Riemann::Babbler::Awesomeplugin
   include Riemann::Babbler
 
-  # быстрый доступ к конфигу
+  # объявление неймспейса плагина
   def plugin
     options.plugins.awesome_plugin
   end
@@ -66,5 +66,5 @@ class Riemann::Babbler::Awesomeplugins
 
 end
 # обязательный вызов
-Riemann::Babbler::Awesomeplugins.run
+Riemann::Babbler::Awesomeplugin.run
 ```
