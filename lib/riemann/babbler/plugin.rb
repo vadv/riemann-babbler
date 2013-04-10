@@ -108,6 +108,7 @@ module Riemann
 
     # хелпер, описание статуса
     def state(my_state)
+      return 'critical' if my_state.nil?
       unless plugin.states.warning.nil?
         case
         when my_state.between?(plugin.states.warning, plugin.states.critical)
