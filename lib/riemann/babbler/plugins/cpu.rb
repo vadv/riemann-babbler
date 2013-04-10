@@ -13,9 +13,11 @@ class Riemann::Babbler::Cpu < Riemann::Babbler
     end
 
     @old_cpu = [u2, n2, s2, i2]
+
+    desc = "usage\n\n#{shell('ps -eo pcpu,pid,cmd | sort -nrb -k1 | head -10').chomp}"
     
-    if @old_cpu
-      { :service => plugin.service, :metric => fraction }
+    if fraction
+      { :service => plugin.service, :metric => fraction, :description => desc }
     else
       { :service => plugin.service, :state => 'ok' }
     end

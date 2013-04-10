@@ -10,7 +10,7 @@ class Riemann::Babbler::Memory < Riemann::Babbler
     total = m['MemTotal'].to_i
     fraction = 1 - (free.to_f / total)
 
-    desc = "usage\n\n#{shell('ps -eo pmem,pid,comm | sort -nrb -k1 | head -10').chomp}"
+    desc = "usage\n\n#{shell('ps -eo pmem,pid,cmd | sort -nrb -k1 | head -10').chomp}"
 
     [
       { :service => plugin.service, :metric => fraction },
