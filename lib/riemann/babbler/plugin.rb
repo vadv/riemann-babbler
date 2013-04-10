@@ -145,7 +145,8 @@ module Riemann
       elsif out
         return out.chomp
       else
-        return true
+        # статус 0, вывода stdout нет
+        return ""
       end
     end
 
