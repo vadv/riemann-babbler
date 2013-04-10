@@ -13,7 +13,13 @@ class Riemann::Babbler::Cpu < Riemann::Babbler
     end
 
     @old_cpu = [u2, n2, s2, i2]
-    { :service => plugin.service, :metric => fraction }
+    
+    if @old_cpu
+      { :service => plugin.service, :metric => fraction }
+    else
+      { :service => plugin.service, :state => 'ok' }
+    end
+
   end
 
 end

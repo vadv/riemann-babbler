@@ -49,7 +49,10 @@ module Riemann
 
     def report(event)
       report_with_diff(event) and return if event[:as_diff]
-      event[:state] = state(event[:metric]) unless plugin.states.critical.nil?
+      # если нет event[:state] то попробовать его добавить
+      unless event[:state]
+        event[:state] = state(event[:metric]) unless plugin.states.critical.nil?
+      end
       event[:tags] = options.riemann.tags unless options.riemann.tags.nil?
       event[:host] =  host
       logger.debug "Report status: #{event.inspect}"
