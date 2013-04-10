@@ -3,7 +3,7 @@ riemann:
   port: 5555
 
 logger:
-  level: 2
+  level: WARN
 
 plugins:
 

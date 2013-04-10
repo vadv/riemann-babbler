@@ -39,6 +39,23 @@ config_default = YAML.load_file( File.expand_path('../../config.yml', __FILE__) 
 config = config_default.deep_merge( config_file )
 configatron.configure_from_hash config
 
+# set logger lvl
+case configatron.logger.level
+  when "INFO"
+    logger.level = Logger::INFO
+  when "WARN"
+    logger.level = Logger::WARN
+  when "ERROR"
+    logger.level = Logger::ERROR
+  when "FATAL"
+    logger.level = Logger::FATAL
+  when "UNKNOWN"
+    logger.level = Logger::UNKNOWN
+  else
+    logger.level = Logger::DEBUG
+end
+
+
 # get plugins
 plugins = []
 default_plugins_dir = File.expand_path('../../lib/riemann/babbler/plugins/', __FILE__)
