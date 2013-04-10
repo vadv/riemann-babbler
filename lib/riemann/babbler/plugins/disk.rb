@@ -24,10 +24,10 @@ class Riemann::Babbler::Disk < Riemann::Babbler
     disk = Array.new
     monit_points.each do |point|
       point_stat = Filesystem.stat point
-      human_point = point == "/" ? "/root" : point
+      human_point = point == "/" ? " /root" : " " + point
       human_point.gsub!(/^\//, "").gsub!(/\//, "_")
-      disk << { :service => human_point + " block", :metric => 1 - point_stat.blocks_available.to_f/point_stat.blocks }
-      disk << { :service => human_point + " inode", :metric => 1 - point_stat.files_available.to_f/point_stat.files }
+      disk << { :service => plugin.service + human_point + " block", :metric => 1 - point_stat.blocks_available.to_f/point_stat.blocks }
+      disk << { :service => plugin.service + human_point + " inode", :metric => 1 - point_stat.files_available.to_f/point_stat.files }
     end
     disk
   end
