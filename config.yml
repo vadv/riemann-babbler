@@ -7,6 +7,8 @@ logger:
 
 plugins:
 
+  interval: 60
+
   dummy:
     service: keep alive
     interval: 1
@@ -35,8 +37,6 @@ plugins:
   memory:
     service: memory
     interval: 1
-    report_free: true
-    report_total: true
     states:
       warning: 0.6
       critical: 0.8
