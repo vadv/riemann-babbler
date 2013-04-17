@@ -20,15 +20,16 @@ module Riemann
     require 'rest_client'
 
     attr_reader :logger
+    attr_reader :riemann
+    alias :r :riemann
     attr_reader :hostname
 
-    def initialize( configatron, logger )
+    def initialize( configatron, logger, riemann )
       @configatron = configatron
       @logger = logger
+      @riemann = riemann
       @storage = Hash.new
-      @configatron.riemann.cache_host = Configatron::Dynamic.new{ riemann_ip }
-      @configatron.riemann.last_cache_time = Time.now
-      @riemann_ip = riemann_random_ip
+      @hostname = get_hostname
       init
       run
     end
@@ -44,27 +45,6 @@ module Riemann
     end
     alias :opts :options
 
-    def riemann_ip
-      if Time.now - options.riemann.last_cache_time > options.riemann.dns_ttl
-        options.riemann.last_cache_time = Time.now  
-        @riemann_ip = riemann_random_ip
-      end
-      @riemann_ip
-    end
-
-    def riemann_random_ip
-      ipaddress = Resolv.new.getaddresses(configatron.riemann.host)
-      ipaddress[rand(ipaddress.length)]
-    end
-
-    def riemann
-      @riemann ||= Riemann::Client.new(
-        :host => options.riemann.cache_host,
-        :port => options.riemann.port
-      )
-    end
-    alias :r :riemann
-
     def report(event)
       report_with_diff(event) and return if event[:as_diff]
       # если нет event[:state] то попробовать его добавить
@@ -72,8 +52,9 @@ module Riemann
         event[:state] = state(event[:metric]) unless plugin.states.critical.nil?
       end
       event[:tags] = options.riemann.tags unless options.riemann.tags.nil?
-      event[:host] =  host
+      event[:host] =  hostname
       logger.debug "Report status: #{event.inspect}"
+      logger.error "Riemann: #{riemann.inspect}"
       riemann << event
     end
 
@@ -83,10 +64,6 @@ module Riemann
       @storage[ event[:service] ] = current_metric
       event.delete(:as_diff)
       report(event)
-    end
-
-    def host
-      @hostname ||= get_hostname
     end
 
     def get_hostname

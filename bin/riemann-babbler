@@ -79,12 +79,20 @@ unless configatron.plugins.files.nil?
   end
 end
 
+# set riemann client
+riemann_ip =  Resolv.new.getaddress(configatron.riemann.host)
+riemann = Riemann::Client.new(
+  :host => riemann_ip, 
+  :port => configatron.riemann.port
+)
+riemann = ( configatron.riemann.proto == 'tcp' ) ? riemann.tcp : riemann
+
 # start plugins
 plugins.each { |plugin| require plugin }
 
 plugin_threads = Riemann::Babbler.registered_plugins.map do |plugin|
   Thread.new {
-    plugin.new( configatron, logger ).run
+    plugin.new( configatron, logger, riemann ).run
   }
 end
 

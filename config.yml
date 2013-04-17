@@ -1,10 +1,10 @@
 riemann:
-  host: localhost
+  host: 127.0.0.1
   port: 5555
-  dns_ttl: 120
+  proto: auto # auto use tcp + udp(max size 16384), tcp - tcp only
 
 logger:
-  level: WARN
+  level: DEBUG
 
 plugins:
 
