@@ -13,7 +13,7 @@ class Riemann::Babbler::Memory < Riemann::Babbler
     used = total - free
     free_bc = free + buffers + cached
 
-    fraction = 1 - (free.to_f / total)
+    fraction = (free.to_f / total)
     swap_fraction = m['SwapTotal'] == 0 ? 0 : 1 - m['SwapFree'].to_f/m['SwapTotal']
 
     desc = "usage\n\n#{shell('ps -eo pmem,pid,cmd | sort -nrb -k1 | head -10').chomp}"
