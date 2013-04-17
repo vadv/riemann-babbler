@@ -6,10 +6,10 @@ class Riemann::Babbler::Memory < Riemann::Babbler
       info[x[0]] = x[1].to_i
       info
     }
-    free = m['MemFree'].to_i
-    cached =m['Cached'].to_i
-    buffers =m['Buffers'].to_i
-    total = m['MemTotal'].to_i
+    free = m['MemFree'].to_i * 1024
+    cached =m['Cached'].to_i * 1024
+    buffers =m['Buffers'].to_i * 1024
+    total = m['MemTotal'].to_i * 1024
     used = total - free
     free_bc = free + buffers + cached
 
