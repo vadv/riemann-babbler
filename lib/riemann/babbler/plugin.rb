@@ -26,6 +26,9 @@ module Riemann
       @configatron = configatron
       @logger = logger
       @storage = Hash.new
+      @configatron.riemann.cache_host = Configatron::Dynamic.new{ riemann_ip }
+      @configatron.riemann.last_cache_time = Time.now
+      @riemann_ip = riemann_random_ip
       init
       run
     end
@@ -41,9 +44,22 @@ module Riemann
     end
     alias :opts :options
 
+    def riemann_ip
+      if Time.now - options.riemann.last_cache_time > options.riemann.dns_ttl
+        options.riemann.last_cache_time = Time.now  
+        @riemann_ip = riemann_random_ip
+      end
+      @riemann_ip
+    end
+
+    def riemann_random_ip
+      ipaddress = Resolv.new.getaddresses(configatron.riemann.host)
+      ipaddress[rand(ipaddress.length)]
+    end
+
     def riemann
       @riemann ||= Riemann::Client.new(
-        :host => options.riemann.host,
+        :host => options.riemann.cache_host,
         :port => options.riemann.port
       )
     end

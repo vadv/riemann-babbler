@@ -1,6 +1,7 @@
 riemann:
   host: localhost
   port: 5555
+  dns_ttl: 120
 
 logger:
   level: WARN

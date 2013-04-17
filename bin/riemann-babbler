@@ -79,10 +79,6 @@ unless configatron.plugins.files.nil?
   end
 end
 
-# патч на dns resolv
-ipaddress = Resolv.new.getaddresses(configatron.riemann.host)
-configatron.riemann.host = ipaddress[rand(ipaddress.length)]
-
 # start plugins
 plugins.each { |plugin| require plugin }
 
@@ -92,7 +88,7 @@ plugin_threads = Riemann::Babbler.registered_plugins.map do |plugin|
   }
 end
 
-Signal.trap "USR2" do # перехватываем сообщение (на будущее)
+Signal.trap "TERM" do # перехватываем сообщение (на будущее)
   plugin_threads.each( &:kill )
 end
 
