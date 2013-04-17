@@ -5,6 +5,7 @@ require 'trollop'
 require 'yaml'
 require 'configatron'
 require 'logger'
+require 'resolv'
 
 require File.expand_path('../../lib/riemann/version', __FILE__)
 require File.expand_path('../../lib/deep_merge', __FILE__)
@@ -77,6 +78,10 @@ unless configatron.plugins.files.nil?
     plugins << file
   end
 end
+
+# патч на dns resolv
+ipaddress = Resolv.new.getaddresses(configatron.riemann.host)
+configatron.riemann.host = ipaddress[rand(ipaddress.length)]
 
 # start plugins
 plugins.each { |plugin| require plugin }
