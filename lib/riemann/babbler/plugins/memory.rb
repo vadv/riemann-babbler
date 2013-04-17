@@ -6,17 +6,27 @@ class Riemann::Babbler::Memory < Riemann::Babbler
       info[x[0]] = x[1].to_i
       info
     }
-    free = m['MemFree'].to_i + m['Buffers'].to_i + m['Cached'].to_i
+    free = m['MemFree'].to_i
+    cached =m['Cached'].to_i
+    buffers =m['Buffers'].to_i
     total = m['MemTotal'].to_i
+    used = total - free
+    free_bc = free + buffers + cached
+
     fraction = 1 - (free.to_f / total)
+    swap_fraction = (m['SwapTotal'] - m['SwapFree']).to_f/m['SwapTotal']
 
     desc = "usage\n\n#{shell('ps -eo pmem,pid,cmd | sort -nrb -k1 | head -10').chomp}"
 
     [
       { :service => plugin.service + " % free", :metric => fraction },
-      { :service => plugin.service + " % swap", :metric => (m['SwapTotal'] - m['SwapFree']).to_f/m['SwapTotal'] },
-      { :service => plugin.service + " total free", :metric => free.to_i, :state => 'ok', :description => desc },
-      { :service => plugin.service + " total total", :metric => total.to_i, :state => 'ok', :description => desc }
+      { :service => plugin.service + " % swap", :metric => swap_fraction },
+      { :service => plugin.service + " abs free", :metric => free, :state => 'ok', :description => desc },
+      { :service => plugin.service + " abs total", :metric => total, :state => 'ok', :description => desc },
+      { :service => plugin.service + " abs cached", :metric => cached, :state => 'ok', :description => desc },
+      { :service => plugin.service + " abs buffers", :metric => buffers, :state => 'ok', :description => desc },
+      { :service => plugin.service + " abs used", :metric => used , :state => 'ok', :description => desc },
+      { :service => plugin.service + " abs free_bc", :metric => free_bc , :state => 'ok', :description => desc }
     ]
   end
 
