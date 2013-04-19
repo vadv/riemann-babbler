@@ -1,3 +1,6 @@
+require File.expand_path('../deep_merge', __FILE__)
+require File.expand_path('../riemann/babbler/plugin', __FILE__)
+
 def set_logger_lvl(logger, configatron)
   case configatron.logger.level
   when "INFO"
@@ -67,7 +70,9 @@ end
 
 # логика стартования плагинов
 def start_plugins(registered_plugins, riemann, logger, configatron)
+
   plugins_for_run = registered_plugins
+
   if run_only = configatron.plugins.run_only
     plugins_for_run.delete_if {|plugin| ! run_only.include? plugin.to_s.split("::").last.downcase }
   end unless ( configatron.plugins.run_only.nil? || configatron.plugins.run_only.empty? )

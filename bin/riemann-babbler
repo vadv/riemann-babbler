@@ -9,9 +9,7 @@ require 'resolv'
 require 'sequel'
 
 require File.expand_path('../../lib/riemann/version', __FILE__)
-require File.expand_path('../../lib/deep_merge', __FILE__)
 require File.expand_path('../../lib/start_helpers', __FILE__)
-require File.expand_path('../../lib/riemann/babbler/plugin', __FILE__)
 
 opts = Trollop::options do
   version "Riemann babbler #{Riemann::Babbler::VERSION}"
@@ -29,6 +27,7 @@ end
 # logger
 logger = Logger.new(STDOUT)
 
+# start_helpers
 merge_config(logger, opts, configatron)
 set_logger_lvl(logger, configatron)
 load_plugins(configatron)
