@@ -17,7 +17,8 @@ module Riemann
       err=nil
       out=nil
       begin
-      Timeout::timeout(5) {
+      timeout_shell = ( plugin.interval * 2 ).to_f/3
+      Timeout::timeout(timeout_shell) {
         Open3.popen3(*cmd) do |stdin, stdout, stderr, wait_thread|
           err = stderr.gets(nil)
           out = stdout.gets(nil)
@@ -42,7 +43,7 @@ module Riemann
     # db get
     # http://sequel.rubyforge.org/rdoc/files/doc/opening_databases_rdoc.html
     # 
-    def db_get(connection_string, query)
+    def sql(connection_string, query)
       begin
         db = Sequel.connect connection_string
         db.fetch(query)
