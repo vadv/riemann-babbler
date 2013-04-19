@@ -71,13 +71,11 @@ end
 # логика стартования плагинов
 def start_plugins(registered_plugins, riemann, logger, configatron)
 
-  plugins_for_run = registered_plugins
-
   if run_only = configatron.plugins.run_only
-    plugins_for_run.delete_if {|plugin| ! run_only.include? plugin.to_s.split("::").last.downcase }
+    registered_plugins.delete_if {|plugin| ! run_only.include? plugin.to_s.split("::").last.downcase }
   end unless ( configatron.plugins.run_only.nil? || configatron.plugins.run_only.empty? )
 
-  plugin_threads = plugins_for_run.map do |plugin|
+  plugin_threads = registered_plugins.map do |plugin|
     Thread.new {
       plugin.new( configatron, logger, riemann ).run
     }
@@ -90,3 +88,20 @@ def start_plugins(registered_plugins, riemann, logger, configatron)
 
   plugin_threads.each( &:join )
 end
+
+def load_parent(configatron)
+  configatron.to_hash[:plugins].each do |plugin, opts|
+    next if opts.nil?
+    next unless opts.kind_of? Hash
+    create_class(plugin.capitalize, opts[:parent].capitalize) if opts.has_key? :parent
+  end
+end
+
+# plugin load parent
+def create_class(new_class, parent_class)
+  cmd = "class Riemann::Babbler::#{new_class} < Riemann::Babbler::#{parent_class}; end;"
+  cmd += "Riemann::Babbler.registered_plugins << Riemann::Babbler::#{new_class}"
+  eval(cmd)
+end
+
+

@@ -28,8 +28,9 @@ end
 logger = Logger.new(STDOUT)
 
 # start_helpers
-merge_config(logger, opts, configatron)
-set_logger_lvl(logger, configatron)
-load_plugins(configatron)
-riemann = get_riemann(configatron)
+merge_config( logger, opts, configatron )
+set_logger_lvl( logger, configatron )
+load_plugins( configatron )
+riemann = get_riemann( configatron )
+load_parent( configatron )
 start_plugins( Riemann::Babbler.registered_plugins, riemann, logger, configatron )
