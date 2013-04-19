@@ -54,7 +54,6 @@ module Riemann
       event[:tags] = options.riemann.tags unless options.riemann.tags.nil?
       event[:host] =  hostname
       logger.debug "Report status: #{event.inspect}"
-      logger.error "Riemann: #{riemann.inspect}"
       riemann << event
     end
 
@@ -82,7 +81,7 @@ module Riemann
     def tick
       posted_array = collect
       posted_array = posted_array.class == Array ? posted_array : [ posted_array ]
-      posted_array.each { |event| report event }
+      posted_array.uniq.each { |event| report event }
     end
 
     # Plugin init

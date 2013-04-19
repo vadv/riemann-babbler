@@ -6,6 +6,7 @@ require 'yaml'
 require 'configatron'
 require 'logger'
 require 'resolv'
+require 'sequel'
 
 require File.expand_path('../../lib/riemann/version', __FILE__)
 require File.expand_path('../../lib/deep_merge', __FILE__)
