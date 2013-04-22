@@ -69,6 +69,7 @@ def get_riemann(configatron, logger)
   rescue
     logger.error "Can't resolv riemann host: #{configatron.riemann.host}"
     sleep 5
+    retry
   end
     riemann
 end
