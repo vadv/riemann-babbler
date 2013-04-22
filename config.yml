@@ -2,13 +2,12 @@ riemann:
   host: 127.0.0.1
   port: 5555
   proto: auto # auto use tcp + udp(max size 16384), tcp - tcp only
+  interval: 60 # update interval for all plugins 
 
 logger:
   level: DEBUG
 
 plugins:
-
-  interval: 60
 
   dummy:
     service: keep alive
