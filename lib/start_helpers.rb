@@ -58,7 +58,7 @@ def load_plugins(configatron)
   plugins.each { |plugin| require plugin }
 end
 
-def get_riemann(configatron)
+def get_riemann(configatron, logger)
   begin
     riemann_ip =  Resolv.new.getaddress(configatron.riemann.host)
     riemann = Riemann::Client.new(
