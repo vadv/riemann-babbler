@@ -62,7 +62,7 @@ def load_gems_plugins(configatron)
   plugins = Array.new
   Gem.source_index.each do |gem|  
     plugin_name = gem[1].to_s.scan(/\s+name=(.+)\s+/)[0][0]
-    plugins << plugin_name if plugin_name.include? 'riemann-babbler-plugins-'
+    plugins << plugin_name if plugin_name.include? 'riemann-babbler-plugin-'
   end
   plugins.each { |plugin| require plugin }
 end
