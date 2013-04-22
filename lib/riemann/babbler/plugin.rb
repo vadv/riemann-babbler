@@ -69,7 +69,11 @@ module Riemann
 
     def get_hostname
       hostname = File.read('/proc/sys/kernel/hostname').strip.downcase
-      hostname += options.riemann.suffix unless options.riemann.suffix.nil?
+      if options.riemann.installation.nil?
+        hostname += options.riemann.suffix unless options.riemann.suffix.nil?
+      else
+        hostname += ( "." + options.riemann.installation )
+      end
       hostname = options.riemann.prefix + hostname unless options.riemann.prefix.nil?
       hostname
     end
