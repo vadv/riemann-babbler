@@ -31,7 +31,7 @@ module Riemann
       @storage = Hash.new
       @hostname = get_hostname
       init
-      plugin.set_default(:interval, configatron.plugins.interval) unless configatron.plugins.interval.nil?
+      plugin.set_default(:interval, configatron.plugins.interval)
       run
     end
 

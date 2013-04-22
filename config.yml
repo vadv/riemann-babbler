@@ -15,36 +15,30 @@ plugins:
 
   dummy:
     service: keep alive
-    interval: 1
 
   la:
     service: la
-    interval: 60
     states:
       warning: 4
       critical: 10
 
   disk:
     service: disk
-    interval: 60
     states:
       warning: 0.7
       critical: 0.85
 
   cpu:
     service: cpu usage
-    interval: 60
     states:
       warning: 0.7
       critical: 0.85
 
   memory:
     service: memory
-    interval: 60
     states:
       warning: 0.6
       critical: 0.8
 
   net:
     service: net
-    interval: 60
