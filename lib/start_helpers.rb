@@ -87,7 +87,6 @@ end
 def start_plugins(registered_plugins, riemann, logger, configatron)
   run_only = Array.new
   configatron.plugins.to_hash.keys.each { |key| run_only << key.to_s }
-  puts run_only.inspect
   registered_plugins.delete_if {|plugin| ! run_only.include? plugin.to_s.split("::").last.downcase }
 
   plugin_threads = registered_plugins.map do |plugin|
