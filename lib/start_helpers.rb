@@ -35,7 +35,7 @@ end
 
 # получаем список все плагинов
 def load_plugins(configatron)
-  plugins = []
+  plugins = Array.new
   default_plugins_dir = File.expand_path('../riemann/babbler/plugins/', __FILE__)
   Dir.glob( default_plugins_dir + "/*.rb" ) do |file|
     plugins <<  file
@@ -58,6 +58,15 @@ def load_plugins(configatron)
   plugins.each { |plugin| require plugin }
 end
 
+def load_gems_plugins(configatron)
+  plugins = Array.new
+  Gem.source_index.each do |gem|  
+    plugin_name = gem[1].to_s.scan(/\s+name=(.+)\s+/)[0][0]
+    plugins << plugin_name if plugin_name.include? 'riemann-babbler-plugins-'
+  end
+  plugins.each { |plugin| require plugin }
+end
+
 def get_riemann(configatron, logger)
   begin
     riemann_ip =  Resolv.new.getaddress(configatron.riemann.host)
@@ -76,10 +85,10 @@ end
 
 # логика стартования плагинов
 def start_plugins(registered_plugins, riemann, logger, configatron)
-
-  if run_only = configatron.plugins.run_only
-    registered_plugins.delete_if {|plugin| ! run_only.include? plugin.to_s.split("::").last.downcase }
-  end unless ( configatron.plugins.run_only.nil? || configatron.plugins.run_only.empty? )
+  run_only = Array.new
+  configatron.plugins.to_hash.keys.each { |key| run_only << key.to_s }
+  puts run_only.inspect
+  registered_plugins.delete_if {|plugin| ! run_only.include? plugin.to_s.split("::").last.downcase }
 
   plugin_threads = registered_plugins.map do |plugin|
     Thread.new {

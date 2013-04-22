@@ -8,9 +8,6 @@ logger:
 
 plugins:
 
-  run_only:
-  #  - cpu
-
   interval: 60
 
   dummy:
