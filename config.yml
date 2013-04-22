@@ -21,8 +21,8 @@ plugins:
   disk:
     service: disk
     states:
-      warning: 0.7
-      critical: 0.85
+      warning: 70
+      critical: 85
 
   cpu:
     service: cpu usage
@@ -33,8 +33,8 @@ plugins:
   memory:
     service: memory
     states:
-      warning: 0.6
-      critical: 0.8
+      warning: 70
+      critical: 85
 
   net:
     service: net

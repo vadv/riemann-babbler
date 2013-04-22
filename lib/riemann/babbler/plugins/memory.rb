@@ -19,8 +19,8 @@ class Riemann::Babbler::Memory < Riemann::Babbler
     desc = "usage\n\n#{shell('ps -eo pmem,pid,cmd | sort -nrb -k1 | head -10').chomp}"
 
     [
-      { :service => plugin.service + " % free", :metric => fraction },
-      { :service => plugin.service + " % swap", :metric => swap_fraction },
+      { :service => plugin.service + " % free", :metric => fraction.round(2) * 100 },
+      { :service => plugin.service + " % swap", :metric => swap_fraction.round(2) * 100 },
       { :service => plugin.service + " abs free", :metric => free, :state => 'ok', :description => desc },
       { :service => plugin.service + " abs total", :metric => total, :state => 'ok', :description => desc },
       { :service => plugin.service + " abs cached", :metric => cached, :state => 'ok', :description => desc },
