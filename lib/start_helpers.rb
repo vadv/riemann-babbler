@@ -59,13 +59,18 @@ def load_plugins(configatron)
 end
 
 def get_riemann(configatron)
-  riemann_ip =  Resolv.new.getaddress(configatron.riemann.host)
-  riemann = Riemann::Client.new(
-    :host => riemann_ip,
-    :port => configatron.riemann.port
-  )
-  riemann = ( configatron.riemann.proto == 'tcp' ) ? riemann.tcp : riemann
-  riemann
+  begin
+    riemann_ip =  Resolv.new.getaddress(configatron.riemann.host)
+    riemann = Riemann::Client.new(
+      :host => riemann_ip,
+      :port => configatron.riemann.port
+    )
+    riemann = ( configatron.riemann.proto == 'tcp' ) ? riemann.tcp : riemann
+  rescue
+    logger.error "Can't resolv riemann host: #{configatron.riemann.host}"
+    sleep 5
+  end
+    riemann
 end
 
 # логика стартования плагинов
