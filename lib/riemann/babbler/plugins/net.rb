@@ -28,7 +28,7 @@ class Riemann::Babbler::Net < Riemann::Babbler
       end.zip(
         $2.split(/\s+/).map { |str| str.to_i }
       ).each do |service, value|
-        status << { :service => service, :metric => value, :as_diff => true }
+        status << { :service => service, :metric => value, :as_diff => true}
       end
     end
     status
