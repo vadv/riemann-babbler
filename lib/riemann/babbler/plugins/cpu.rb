@@ -1,7 +1,9 @@
+#encoding: utf-8
+
 class Riemann::Babbler::Cpu < Riemann::Babbler
 
   def desc
-    "usage\n\n#{shell('ps -eo pcpu,pid,cmd | sort -nrb -k1 | head -10').chomp}"
+    "usage\n\n#{shell('ps -eo pcpu,pid,cmd --sort -pcpu | head -10').chomp}"
   end
 
   def init
@@ -30,7 +32,7 @@ class Riemann::Babbler::Cpu < Riemann::Babbler
       end
 
       @old_cpu[cpu_number] = [u2, n2, s2, i2]
-      array << { :service => plugin.service + " cpu#{cpu_number}", :metric => fraction, :description => description } if fraction
+      array << { :service => plugin.service + " cpu#{cpu_number}", :metric => fraction, :description => "Утилизация cpu#{cpu_number} \n\n" + description } if fraction
     end
     array
   end

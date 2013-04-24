@@ -1,3 +1,5 @@
+#encoding: utf-8
+
 class Riemann::Babbler::Memory < Riemann::Babbler
 
   def collect
@@ -16,17 +18,17 @@ class Riemann::Babbler::Memory < Riemann::Babbler
     fraction = 1 - (free_bc.to_f / total)
     swap_fraction = m['SwapTotal'] == 0 ? 0 : 1 - m['SwapFree'].to_f/m['SwapTotal']
 
-    desc = "usage\n\n#{shell('ps -eo pmem,pid,cmd | sort -nrb -k1 | head -10').chomp}"
+    desc = "usage\n\n#{shell('ps -eo pcpu,pid,cmd --sort -pmem | head -10').chomp}"
 
     [
-      { :service => plugin.service + " % free", :metric => fraction.round(2) * 100 },
-      { :service => plugin.service + " % swap", :metric => swap_fraction.round(2) * 100 },
-      { :service => plugin.service + " abs free", :metric => free, :state => 'ok', :description => desc },
-      { :service => plugin.service + " abs total", :metric => total, :state => 'ok', :description => desc },
-      { :service => plugin.service + " abs cached", :metric => cached, :state => 'ok', :description => desc },
-      { :service => plugin.service + " abs buffers", :metric => buffers, :state => 'ok', :description => desc },
-      { :service => plugin.service + " abs used", :metric => used , :state => 'ok', :description => desc },
-      { :service => plugin.service + " abs free_bc", :metric => free_bc , :state => 'ok', :description => desc }
+      { :service => plugin.service + " % free", :description => "Процент утилизации памяти", :metric => fraction.round(2) * 100 },
+      { :service => plugin.service + " % swap", :description => "Процент утилизации своп", :metric => swap_fraction.round(2) * 100 },
+      { :service => plugin.service + " abs free", :description => "Утилизация памяти (kB)", :metric => free, :state => 'ok', :description => desc },
+      { :service => plugin.service + " abs total", :description => "Памяти всего (kB)", :metric => total, :state => 'ok', :description => desc },
+      { :service => plugin.service + " abs cached", :description => "Утилизация памяти cached (kB)",  :metric => cached, :state => 'ok', :description => desc },
+      { :service => plugin.service + " abs buffers", :description => "Утилизация памяти buffers (kB)", :metric => buffers, :state => 'ok', :description => desc },
+      { :service => plugin.service + " abs used", :description => "Утилизация памяти used (kB)", :metric => used , :state => 'ok', :description => desc },
+      { :service => plugin.service + " abs free_bc", :description => "Утилизация памяти с cache и buffers (kB)", :metric => free_bc , :state => 'ok', :description => desc }
     ]
   end
 
