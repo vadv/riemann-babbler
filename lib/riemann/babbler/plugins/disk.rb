@@ -28,10 +28,10 @@ class Riemann::Babbler::Disk < Riemann::Babbler
       point_stat = Filesystem.stat point
       human_point = point == "/" ? "/root" : point
       human_point.gsub!(/^\//, "").gsub!(/\//, "_")
-      disk << { :service => plugin.service + " #{human_point} % block", :description => "Disk usage #{point_stat}, %", :metric => (1- point_stat.blocks_available.to_f/point_stat.blocks).round(2) * 100 }
-      disk << { :service => plugin.service + " #{human_point} % inode", :description => "Disk usage #{point_stat}, inodes %", :metric => (1 - point_stat.files_available.to_f/point_stat.files).round(2) * 100 }
-      disk << { :service => plugin.service + " #{human_point} abs free", :description => "Disk free #{point_stat}, B", :metric =>  point_stat.blocks_free * point_stat.block_size, :state => 'ok'}
-      disk << { :service => plugin.service + " #{human_point} abs total", :description => "Disk space #{point_stat}, B",  :metric =>  point_stat.blocks * point_stat.block_size, :state => 'ok'}
+      disk << { :service => plugin.service + " #{human_point} % block", :description => "Disk usage #{point}, %", :metric => (1- point_stat.blocks_available.to_f/point_stat.blocks).round(2) * 100 }
+      disk << { :service => plugin.service + " #{human_point} % inode", :description => "Disk usage #{point}, inodes %", :metric => (1 - point_stat.files_available.to_f/point_stat.files).round(2) * 100 }
+      disk << { :service => plugin.service + " #{human_point} abs free", :description => "Disk free #{point}, B", :metric =>  point_stat.blocks_free * point_stat.block_size, :state => 'ok'}
+      disk << { :service => plugin.service + " #{human_point} abs total", :description => "Disk space #{point}, B",  :metric =>  point_stat.blocks * point_stat.block_size, :state => 'ok'}
     end
     disk
   end
