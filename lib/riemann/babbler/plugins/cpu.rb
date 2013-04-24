@@ -32,8 +32,7 @@ class Riemann::Babbler::Cpu < Riemann::Babbler
       end
 
       @old_cpu[cpu_number] = [u2, n2, s2, i2]
-      spaces = "                                "
-      array << { :service => plugin.service + " cpu#{cpu_number}", :metric => fraction, :description => "Cpu#{cpu_number} usage#{spaces}\n\n#{description}" } if fraction
+      array << { :service => plugin.service + " cpu#{cpu_number}", :metric => fraction, :description => "Cpu#{cpu_number} usage\n\n#{description}" } if fraction
     end
     array
   end
