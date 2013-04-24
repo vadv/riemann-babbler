@@ -68,7 +68,7 @@ module Riemann
     end
 
     def get_hostname
-      hostname = File.read('/proc/sys/kernel/hostname').strip.downcase
+      hostname = options.riemann.use_fqdn.nil? ? File.read('/proc/sys/kernel/hostname').strip.downcase : Socket.gethostbyname(Socket.gethostname).first
       if options.riemann.installation.nil?
         hostname += options.riemann.suffix unless options.riemann.suffix.nil?
       else

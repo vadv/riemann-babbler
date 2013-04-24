@@ -7,6 +7,7 @@ require 'configatron'
 require 'logger'
 require 'resolv'
 require 'sequel'
+require 'socket'
 
 require File.expand_path('../../lib/riemann/version', __FILE__)
 require File.expand_path('../../lib/start_helpers', __FILE__)
