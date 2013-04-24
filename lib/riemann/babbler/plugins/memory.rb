@@ -23,12 +23,12 @@ class Riemann::Babbler::Memory < Riemann::Babbler
     [
       { :service => plugin.service + " % free", :description => "Процент утилизации памяти", :metric => fraction.round(2) * 100 },
       { :service => plugin.service + " % swap", :description => "Процент утилизации своп", :metric => swap_fraction.round(2) * 100 },
-      { :service => plugin.service + " abs free", :description => "Утилизация памяти (kB)", :metric => free, :state => 'ok', :description => desc },
-      { :service => plugin.service + " abs total", :description => "Памяти всего (kB)", :metric => total, :state => 'ok', :description => desc },
-      { :service => plugin.service + " abs cached", :description => "Утилизация памяти cached (kB)",  :metric => cached, :state => 'ok', :description => desc },
-      { :service => plugin.service + " abs buffers", :description => "Утилизация памяти buffers (kB)", :metric => buffers, :state => 'ok', :description => desc },
-      { :service => plugin.service + " abs used", :description => "Утилизация памяти used (kB)", :metric => used , :state => 'ok', :description => desc },
-      { :service => plugin.service + " abs free_bc", :description => "Утилизация памяти с cache и buffers (kB)", :metric => free_bc , :state => 'ok', :description => desc }
+      { :service => plugin.service + " abs free", :description => "Утилизация памяти (kB)\n\n #{desc}", :metric => free, :state => 'ok' },
+      { :service => plugin.service + " abs total", :description => "Памяти всего (kB)\n\n #{desc}", :metric => total, :state => 'ok' },
+      { :service => plugin.service + " abs cached", :description => "Утилизация памяти cached (kB)\n\n #{desc}",  :metric => cached, :state => 'ok' },
+      { :service => plugin.service + " abs buffers", :description => "Утилизация памяти buffers (kB)\n\n #{desc}", :metric => buffers, :state => 'ok' },
+      { :service => plugin.service + " abs used", :description => "Утилизация памяти used (kB)\n\n #{desc}", :metric => used , :state => 'ok' },
+      { :service => plugin.service + " abs free_bc", :description => "Утилизация памяти с cache и buffers (kB)\n\n #{desc}", :metric => free_bc , :state => 'ok' }
     ]
   end
 
