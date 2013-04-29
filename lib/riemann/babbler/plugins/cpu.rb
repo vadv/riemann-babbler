@@ -18,7 +18,7 @@ class Riemann::Babbler::Cpu < Riemann::Babbler
       # проверяем есть строчка /cpu\d+/ или /cpu / и сграбливаем это в переменную
       cpu_number = cpu_line.scan(/cpu(\d+|\s)\s+/)
       next if cpu_number.empty?
-      cpu_number = cpu_number[0][0] == " " ? "_total" : cpu_number[0][0] 
+      cpu_number = cpu_number[0][0] == ' ' ? '_total' : cpu_number[0][0]
 
       # работаем со строкой
       cpu_line[/cpu(\d+|\s)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/]

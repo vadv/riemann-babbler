@@ -3,7 +3,7 @@
 module Riemann
   class Babbler
 
-    def helper_error(msg = "Unknown helper error")
+    def helper_error(msg = 'Unknown helper error')
       report({
         :service => plugin.service,
         :state => 'critical',
@@ -20,10 +20,10 @@ module Riemann
       timeout_shell = ( plugin.interval * 2 ).to_f/3
       Timeout::timeout(timeout_shell) {
         Open3.popen3(*cmd) do |stdin, stdout, stderr, wait_thread|
-          err = stderr.gets(nil)
-          out = stdout.gets(nil)
+
+
           [stdin, stdout, stderr].each{|stream| stream.send('close')}
-          exit_status = wait_thread.value
+
         end
       }
       rescue => e
@@ -36,7 +36,7 @@ module Riemann
         return out.chomp
       else
         # статус 0, вывода stdout нет
-        return ""
+        ''
       end
     end
 

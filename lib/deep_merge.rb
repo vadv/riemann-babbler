@@ -2,12 +2,12 @@
 class Hash
 
   def deep_merge!(specialized_hash)
-    return internal_deep_merge!(self, specialized_hash)
+    internal_deep_merge!(self, specialized_hash)
   end
 
 
   def deep_merge(specialized_hash)
-    return internal_deep_merge!(Hash.new.replace(self), specialized_hash)
+    internal_deep_merge!(Hash.new.replace(self), specialized_hash)
   end
 
 
@@ -43,6 +43,6 @@ class Hash
 
     #puts "deep merge done."
 
-    return source_hash
+    source_hash
   end
 end

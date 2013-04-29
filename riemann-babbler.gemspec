@@ -2,13 +2,13 @@
 require File.expand_path('../lib/riemann/version', __FILE__)
 
 Gem::Specification.new do |s|
-  s.name        = "riemann-babbler"
+  s.name        = 'riemann-babbler'
   s.version     = Riemann::Babbler::VERSION
-  s.authors     = ["Vasiliev D.V."]
+  s.authors     = ['Vasiliev D.V.']
   s.email       = %w(vadv.mkn@gmail.com)
-  s.homepage    = "https://github.com/vadv/riemann-babbler"
-  s.summary     = %q{Riemann health cheker.}
-  s.description = %q{Some plugins mannager for riemann.}
+  s.homepage    = 'https://github.com/vadv/riemann-babbler'
+  s.summary     = %q{Riemann health checker.}
+  s.description = %q{Some plugins manager for riemann.}
   s.licenses    = %w(MIT)
   
   s.add_dependency('riemann-client')

@@ -20,8 +20,8 @@ class Riemann::Babbler::Net < Riemann::Babbler
     f = File.read('/proc/net/dev')
     status = Array.new
     f.split("\n").each do |line|
-      iface = line.split(":")[0].strip
-      iface.gsub!(/\./,"_")
+      iface = line.split(':')[0].strip
+      iface.gsub!(/\./, '_')
       next unless line =~ /(\w*)\:\s*([\s\d]+)\s*/
       WORDS.map do |service|
         "#{plugin.service} #{iface} #{service}"

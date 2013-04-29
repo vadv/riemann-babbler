@@ -17,7 +17,7 @@ where [options] are:
 ```
 
 ### Config
-Bubbler load main config and merge custom plugins
+Babbler load main config and merge custom plugins
 ```yaml
 riemann:
   host: riemann.host 
@@ -26,7 +26,7 @@ riemann:
     - prod
     - web
   suffix: ".testing"
-  preffix: "previx"
+  preffix: "prefix"
 
 plugins:
   dirs:

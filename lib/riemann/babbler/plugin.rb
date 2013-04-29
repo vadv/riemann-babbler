@@ -37,7 +37,7 @@ module Riemann
 
     # Доступ к конфигу определенного плагина
     def plugin
-      plugin_name = self.class.name.split( "::" ).last.gsub( /(\p{Lower})(\p{Upper})/, "\\1_\\2" ).downcase
+      plugin_name = self.class.name.split('::').last.gsub( /(\p{Lower})(\p{Upper})/, "\\1_\\2" ).downcase
       options.plugins.send plugin_name
     end
 
@@ -78,7 +78,7 @@ module Riemann
       if options.riemann.installation.nil?
         hostname += options.riemann.suffix unless options.riemann.suffix.nil?
       else
-        hostname += ( "." + options.riemann.installation )
+        hostname += ( '.' + options.riemann.installation )
       end
       hostname = options.riemann.prefix + hostname unless options.riemann.prefix.nil?
       hostname
@@ -102,7 +102,7 @@ module Riemann
 
     def run
       # выйти если run_plugin не равен true
-      return 0 unless run_plugin == true
+      return 0 unless run_plugin
       t0 = Time.now
       loop do
         begin
@@ -118,17 +118,17 @@ module Riemann
     # хелпер, описание статуса
     def state(my_state)
       return 'critical' if my_state.nil?
-      unless plugin.states.warning.nil?
-        case
-        when my_state.between?(plugin.states.warning, plugin.states.critical)
-          'warning'
-        when my_state > plugin.states.warning
-          'critical'
-        else
-          'ok'
-        end
-      else
+      if plugin.states.warning.nil?
         my_state >= plugin.states.critical ? 'critical' : 'ok'
+      else
+        case
+          when my_state.between?(plugin.states.warning, plugin.states.critical)
+            'warning'
+          when my_state > plugin.states.warning
+            'critical'
+          else
+            'ok'
+        end
       end
     end
 

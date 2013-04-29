@@ -3,15 +3,15 @@ require File.expand_path('../riemann/babbler/plugin', __FILE__)
 
 def set_logger_lvl(logger, configatron)
   case configatron.logger.level
-  when "INFO"
+  when 'INFO'
     logger.level = Logger::INFO
-  when "WARN"
+  when 'WARN'
     logger.level = Logger::WARN
-  when "ERROR"
+  when 'ERROR'
     logger.level = Logger::ERROR
-  when "FATAL"
+  when 'FATAL'
     logger.level = Logger::FATAL
-  when "UNKNOWN"
+  when 'UNKNOWN'
     logger.level = Logger::UNKNOWN
   else
     logger.level = Logger::DEBUG
@@ -37,14 +37,14 @@ end
 def load_plugins(configatron)
   plugins = Array.new
   default_plugins_dir = File.expand_path('../riemann/babbler/plugins/', __FILE__)
-  Dir.glob( default_plugins_dir + "/*.rb" ) do |file|
+  Dir.glob( default_plugins_dir + '/*.rb') do |file|
     plugins <<  file
   end
 
   unless configatron.plugins.dirs.nil?
     configatron.plugins.dirs.each do |dir|
       next unless Dir.exist? dir
-      Dir.glob( dir + "/*.rb" ) do |file|
+      Dir.glob( dir + '/*.rb') do |file|
         plugins << file
       end
     end
@@ -87,7 +87,7 @@ end
 def start_plugins(registered_plugins, riemann, logger, configatron)
   run_only = Array.new
   configatron.plugins.to_hash.keys.each { |key| run_only << key.to_s }
-  registered_plugins.delete_if {|plugin| ! run_only.include? plugin.to_s.split("::").last.downcase }
+  registered_plugins.delete_if {|plugin| ! run_only.include? plugin.to_s.split('::').last.downcase }
 
   plugin_threads = registered_plugins.map do |plugin|
     Thread.new {
@@ -96,7 +96,7 @@ def start_plugins(registered_plugins, riemann, logger, configatron)
   end
 
   # plugin control
-  Signal.trap "TERM" do
+  Signal.trap 'TERM' do
     plugin_threads.each( &:kill )
   end
 
