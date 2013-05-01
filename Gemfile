@@ -7,6 +7,7 @@ gem 'trollop'
 gem 'sys-filesystem'
 gem 'rest-client'
 gem 'sequel'
+gem 'net-ping'
 
 gem 'rspec'
 gem 'rake'

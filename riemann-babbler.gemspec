@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
   s.add_dependency('trollop')
   s.add_dependency('sys-filesystem')
   s.add_dependency('rest-client')
+  s.add_dependency('net-ping')
   s.add_dependency('sequel')
 
   s.files         = `git ls-files`.split("\n")

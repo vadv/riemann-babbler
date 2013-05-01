@@ -12,6 +12,8 @@ GEM
     method_source (0.8.1)
     mime-types (1.21)
     mtrc (0.0.4)
+    net-ping (1.6.0)
+      ffi (>= 1.0.0)
     pry (0.9.12)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
@@ -45,6 +47,7 @@ DEPENDENCIES
   awesome_print
   configatron
   logger
+  net-ping
   pry
   rake
   rest-client
