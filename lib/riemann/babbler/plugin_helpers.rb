@@ -40,18 +40,6 @@ module Riemann
       end
     end
 
-    # db get
-    # http://sequel.rubyforge.org/rdoc/files/doc/opening_databases_rdoc.html
-    # 
-    def sql(connection_string, query)
-      begin
-        db = Sequel.connect connection_string
-        db.fetch(query)
-      rescue => e
-        helper_error "#{e.class} #{e}\n#{e.backtrace.join "\n"}"
-      end
-    end
-
     # http rest 
     def rest_get(url)
       begin
