@@ -1,6 +1,12 @@
 #encoding: utf-8
 
 require File.expand_path('../plugin_helpers', __FILE__)
+require 'riemann/client'
+require 'open3'
+require 'timeout'
+require 'rest_client'
+require File.expand_path('../monkey_patches', __FILE__)
+
 
 # Базовое описание плагина
 module Riemann
@@ -13,11 +19,6 @@ module Riemann
     def self.inherited( klass )
       registered_plugins << klass
     end
-
-    require 'riemann/client'
-    require 'open3'
-    require 'timeout'
-    require 'rest_client'
 
     attr_reader :logger
     attr_reader :riemann
