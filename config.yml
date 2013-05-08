@@ -39,3 +39,24 @@ plugins:
 
   net:
     service: net
+
+  cpufan:
+    service: cpufan
+
+  cputemp:
+    service: cputemp
+
+  exim4:
+    service: exim4
+
+  mdadm:
+    service: mdadm
+
+  megacli:
+    service: megacli
+
+  netstat:
+    service: netstat
+
+  nginx:
+    service: nginx
