@@ -87,7 +87,11 @@ module Riemann
 
     # не запускаем плагин есть 
     def run_plugin
-      true
+      if plugin.run.nil?
+        true
+      else
+        plugin.run == true ? true : false
+      end
     end
 
     # Переодически вызываемое действие
