@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/vadv/riemann-babbler.png)](https://travis-ci.org/vadv/riemann-babbler)
+
 ### Install
 ```
 gem install riemann-babbler
