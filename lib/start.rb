@@ -17,7 +17,6 @@ class Riemann::Babbler::Starter
   def initialize(opts, configatron)
     @opts = opts
     @config = configatron
-    #raise "err" if configatron.nil?
   end
 
   def logger
@@ -88,9 +87,13 @@ class Riemann::Babbler::Starter
 
   def load_gems_plugins
     plugins = Array.new
-    Gem.source_index.each do |gem|
-      plugin_name = gem[1].to_s.scan(/\s+name=(.+)\s+/)[0][0]
-      plugins << plugin_name.gsub('-','/') if plugin_name.include? 'riemann-babbler-plugin-'
+    begin
+      Gem.source_index.each do |gem|
+        plugin_name = gem[1].to_s.scan(/\s+name=(.+)\s+/)[0][0]
+        plugins << plugin_name.gsub('-','/') if plugin_name.include? 'riemann-babbler-plugin-'
+      end
+    rescue
+      logger.error "Can't find gems riemann-babbler-plugin-"
     end
     plugins.each { |plugin| require plugin }
   end
