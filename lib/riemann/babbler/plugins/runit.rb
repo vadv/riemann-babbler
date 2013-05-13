@@ -16,7 +16,9 @@ class Riemann::Babbler::Runit < Riemann::Babbler
     Dir.glob('/etc/service/*').each do |srv|
       next if plugin.not_monit.include? srv
       human_srv = ' ' + srv.gsub(/\/etc\/service\//,"")
-      if File.read( File.join(srv, 'supervise', 'stat') ).strip == 'run'
+      stat_file = File.join(srv, 'supervise', 'stat')
+      next unless File.exists? stat_file
+      if File.read( stat_file ).strip == 'run'
         @status_history.delete "human_srv"
         status << {:service => plugin.service + human_srv , :state => 'ok', :description => "runit service #{human_srv} running"}
       else
