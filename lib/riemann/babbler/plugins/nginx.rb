@@ -16,7 +16,7 @@ class Riemann::Babbler::Nginx < Riemann::Babbler
     plugin.set_default(:service, 'nginx')
     plugin.set_default(:status_file, '/etc/nginx/sites-enabled/status')
     plugin.set_default(:status_url, 'http://127.0.0.1:11311/status')
-    plugin.set_default(:interval, 1)
+    plugin.set_default(:interval, 60)
   end
 
   def run_plugin
@@ -33,7 +33,7 @@ class Riemann::Babbler::Nginx < Riemann::Babbler
     status << { :service => plugin.service + " active", :metric => lines[0].split(":")[1].strip.to_i }
     # lines[3]: Reading: 0 Writing: 1 Waiting: 0
     lines[3].scan(/\d+/).each_with_index do |value, index|
-      status << { :service => plugin.service + " #{NGINX_STATUS_2[index]}", :metric => value }
+      status << { :service => plugin.service + " #{NGINX_STATUS_2[index]}", :metric => value.to_i }
     end
     status
   end

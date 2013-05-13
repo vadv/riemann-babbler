@@ -20,10 +20,7 @@ module Riemann
       timeout_shell = ( plugin.interval * 2 ).to_f/3
       Timeout::timeout(timeout_shell) {
         Open3.popen3(*cmd) do |stdin, stdout, stderr, wait_thread|
-
-
           [stdin, stdout, stderr].each{|stream| stream.send('close')}
-
         end
       }
       rescue => e
@@ -33,7 +30,7 @@ module Riemann
         err = err.chomp if err
         helper_error(err)
       elsif out
-        return out.chomp
+        return out.strip
       else
         # статус 0, вывода stdout нет
         ''
