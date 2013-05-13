@@ -60,3 +60,6 @@ plugins:
 
   nginx:
     service: nginx
+
+  runit:
+    service: runit

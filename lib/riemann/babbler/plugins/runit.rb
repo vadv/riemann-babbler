@@ -8,6 +8,7 @@ class Riemann::Babbler::Runit < Riemann::Babbler
 
   def run_plugin
     Dir.exists? '/etc/service'
+    @status_history = Array.new
   end
 
   def read_run_status
@@ -15,8 +16,12 @@ class Riemann::Babbler::Runit < Riemann::Babbler
     Dir.glob('/etc/service/*').each do |srv|
       next if plugin.not_monit.include? srv
       human_srv = ' ' + srv.gsub(/\/etc\/service\//,"")
-      unless File.read( File.join(srv, 'supervise', 'stat') ).strip == 'run'
-        status << {:service => plugin.service + human_srv , :state => 'critical', :description => "runit service #{human_srv} not running"}
+      if File.read( File.join(srv, 'supervise', 'stat') ).strip == 'run'
+        @status_history.delete "human_srv"
+        status << {:service => plugin.service + human_srv , :state => 'ok', :description => "runit service #{human_srv} running"}
+      else
+        status << {:service => plugin.service + human_srv , :state => 'critical', :description => "runit service #{human_srv} not running"} if @status_history.include? human_srv 
+        @status_history << human_srv unless @status_history.include? human_srv
       end
     end
     status
