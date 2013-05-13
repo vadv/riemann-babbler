@@ -52,4 +52,9 @@ describe Riemann::Babbler do
     dummyplugin.rest_get('http://ya.ru').should include 'yandex.ru'
   end
 
+  it 'TcpPortAviable helper' do
+    dummyplugin = Riemann::Babbler::Dummy2.new(configatron, nil, nil)
+    dummyplugin.tcp_port_aviable?('www.ya.ru', 80).should eq true
+  end
+
 end

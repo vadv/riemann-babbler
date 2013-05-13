@@ -5,6 +5,9 @@ require 'riemann/client'
 require 'open3'
 require 'timeout'
 require 'rest_client'
+require 'socket'
+require 'net/ping'
+require 'sequel'
 require File.expand_path('../support/monkey_patches', __FILE__)
 
 

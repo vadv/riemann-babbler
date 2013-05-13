@@ -1,8 +1,6 @@
 require 'yaml'
 require 'logger'
 require 'resolv'
-require 'sequel'
-require 'socket'
 
 require File.expand_path('../riemann/babbler/support/deep_merge', __FILE__)
 require File.expand_path('../riemann/babbler/plugin', __FILE__)
