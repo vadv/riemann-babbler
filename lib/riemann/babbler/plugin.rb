@@ -1,11 +1,11 @@
 #encoding: utf-8
 
-require File.expand_path('../plugin_helpers', __FILE__)
+require File.expand_path('../support/plugin_helpers', __FILE__)
 require 'riemann/client'
 require 'open3'
 require 'timeout'
 require 'rest_client'
-require File.expand_path('../monkey_patches', __FILE__)
+require File.expand_path('../support/monkey_patches', __FILE__)
 
 
 # Базовое описание плагина
@@ -33,7 +33,6 @@ module Riemann
       @hostname = get_hostname
       init
       plugin.set_default(:interval, configatron.riemann.interval)
-      run
     end
 
     # Доступ к конфигу определенного плагина
@@ -86,7 +85,7 @@ module Riemann
     end
 
     # не запускаем плагин есть 
-    def run_plugin
+    def run_plugin?
       if plugin.run.nil?
         true
       else
@@ -107,7 +106,7 @@ module Riemann
 
     def run
       # выйти если run_plugin не равен true
-      return 0 unless run_plugin
+      return 0 unless run_plugin?
       t0 = Time.now
       loop do
         begin

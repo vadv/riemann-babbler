@@ -2,15 +2,10 @@
 #encoding: utf-8
 
 require 'trollop'
-require 'yaml'
 require 'configatron'
-require 'logger'
-require 'resolv'
-require 'sequel'
-require 'socket'
 
 require File.expand_path('../../lib/riemann/version', __FILE__)
-require File.expand_path('../../lib/start_helpers', __FILE__)
+require File.expand_path('../../lib/start', __FILE__)
 
 opts = Trollop::options do
   version "Riemann babbler #{Riemann::Babbler::VERSION}"
@@ -25,14 +20,5 @@ EOS
   opt :config, 'Config file', :default => '/etc/riemann-babbler/config.yml'
 end
 
-# logger
-logger = Logger.new(STDOUT)
-
-# start_helpers
-merge_config( logger, opts, configatron )
-set_logger_lvl( logger, configatron )
-load_plugins( configatron )
-load_gems_plugins( configatron )
-riemann = get_riemann( configatron, logger )
-load_parent( configatron )
-start_plugins( Riemann::Babbler.registered_plugins, riemann, logger, configatron )
+babbler = Riemann::Babbler::Starter.new(opts, configatron)
+babbler.start!

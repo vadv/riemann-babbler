@@ -4,8 +4,8 @@ class Riemann::Babbler::Netstat < Riemann::Babbler
     plugin.set_default(:service, 'netstat')
     plugin.set_default(:interval, 60)
     plugin.set_default(:port, 80)
-    #plugin.states.set_default(:warning, 300)
-    #plugin.states.set_default(:critical, 400)
+    plugin.states.set_default(:warning, 300)
+    plugin.states.set_default(:critical, 400)
   end
 
   def collect
