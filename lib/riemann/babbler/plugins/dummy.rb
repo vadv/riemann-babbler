@@ -1,7 +1,7 @@
 class Riemann::Babbler::Dummy < Riemann::Babbler
 
   def collect
-    if tcp_port_aviable?(configatron.riemann.host, configatron.riemann.port)
+    if tcp_port_aviable?(riemann.host, riemann.port)
       logger.error "Riemann state 'ok' host: #{configatron.riemann.host}, port #{configatron.riemann.port}, proto tcp"
       []
     else
