@@ -85,7 +85,7 @@ module Riemann
     end
 
     # не запускаем плагин есть 
-    def run_plugin?
+    def run_plugin
       if plugin.run.nil?
         true
       else
@@ -106,7 +106,7 @@ module Riemann
 
     def run
       # выйти если run_plugin не равен true
-      return 0 unless run_plugin?
+      return 0 unless run_plugin
       t0 = Time.now
       loop do
         begin

@@ -17,6 +17,8 @@ class Riemann::Babbler::Starter
   def initialize(opts, configatron)
     @opts = opts
     @config = configatron
+    Configatron.log.level = Logger::FATAL
+    Gem::Deprecate.skip = true
   end
 
   def logger
