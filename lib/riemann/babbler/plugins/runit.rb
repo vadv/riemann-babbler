@@ -3,7 +3,7 @@ class Riemann::Babbler::Runit < Riemann::Babbler
   def init
     plugin.set_default(:service, 'runit')
     plugin.set_default(:not_monit, [])
-    plugin.set_default(:interval, 60)
+    plugin.set_default(:interval, 10)
   end
 
   def run_plugin
