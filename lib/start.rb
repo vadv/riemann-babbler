@@ -9,7 +9,6 @@ class Riemann::Babbler::Starter
 
   attr_reader :logger
   attr_reader :opts
-  attr_reader :riemann
   attr_reader :config
 
   def initialize(opts, configatron)
@@ -27,6 +26,7 @@ class Riemann::Babbler::Starter
     merge_config
     set_logger_lvl
     load_plugins
+    $riemann = get_riemann
     start_plugins!
   end
 
@@ -112,10 +112,6 @@ class Riemann::Babbler::Starter
     eval(cmd)
   end
 
-  def riemann
-    @riemann ||= get_riemann
-  end
-
   def get_riemann
     begin
       riemann_ip =  Resolv.new.getaddress(config.riemann.host)
@@ -126,7 +122,7 @@ class Riemann::Babbler::Starter
       riemann = ( config.riemann.proto == 'tcp' ) ? riemann.tcp : riemann
       riemann.connect
     rescue
-      logger.fatal "Can't resolv riemann host: #{config.riemann.host}"
+      logger.fatal "Can't resolv or connect to riemann host: #{config.riemann.host}"
       sleep 5
       retry
     end
@@ -144,7 +140,7 @@ class Riemann::Babbler::Starter
   def start_plugins!
     plugin_threads = started_plugins.map do |plugin|
       Thread.new {
-        plugin.new( config, logger, riemann ).run
+        plugin.new( config, logger, $riemann ).run
       }
     end
 
