@@ -124,6 +124,7 @@ class Riemann::Babbler::Starter
         :port => config.riemann.port
       )
       riemann = ( config.riemann.proto == 'tcp' ) ? riemann.tcp : riemann
+      riemann.connect
     rescue
       logger.fatal "Can't resolv riemann host: #{config.riemann.host}"
       sleep 5
