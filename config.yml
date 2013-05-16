@@ -55,9 +55,6 @@ plugins:
   megacli:
     service: megacli
 
-  netstat:
-    service: netstat
-
   nginx:
     service: nginx
 
