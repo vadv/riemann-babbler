@@ -6,7 +6,7 @@ class Riemann::Babbler::Dummy < Riemann::Babbler
     else
       logger.fatal "Can't access to riemann host: #{configatron.riemann.host}, port #{configatron.riemann.port}, proto tcp" 
     end
-    disk << { :service => plugin.service, :state => 'ok' }
+    { :service => plugin.service, :state => 'ok' }
   end
 
 end
