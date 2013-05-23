@@ -32,7 +32,12 @@ class Riemann::Babbler::Cpu < Riemann::Babbler
       end
 
       @old_cpu[cpu_number] = [u2, n2, s2, i2]
-      array << { :service => plugin.service + " cpu#{cpu_number}", :metric => fraction, :description => "Cpu#{cpu_number} usage\n\n#{description}" } if fraction
+      # _total идет с трешхолдом, а все остальное без трешхолда
+      if cpu_number == '_total'
+        array << { :service => plugin.service + " cpu#{cpu_number}", :metric => fraction, :description => "Cpu#{cpu_number} usage\n\n#{description}" } if fraction
+      else
+        array << { :service => plugin.service + " cpu#{cpu_number}", :metric => fraction, :description => "Cpu#{cpu_number} usage\n\n#{description}", :state => 'ok' } if fraction
+      end
     end
     array
   end
