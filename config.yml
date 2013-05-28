@@ -4,6 +4,7 @@ riemann:
   proto: auto # auto use tcp + udp(max size 16384), tcp - tcp only
   interval: 60 # update interval for all plugins 
   use_fqdn: true
+  test_connect_on_start: true
 
 logger:
   level: DEBUG
