@@ -18,7 +18,7 @@ class Riemann::Babbler::Memory < Riemann::Babbler
     fraction = 1 - (free_bc.to_f / total)
     swap_fraction = m['SwapTotal'] == 0 ? 0 : 1 - m['SwapFree'].to_f/m['SwapTotal']
 
-    desc = "#{shell('ps -eo pmem,pid,cmd --sort -pmem | head -10').chomp}"
+    desc = "#{shell('ps -eo pmem,pid,cmd --sort -pmem | head -3').chomp}"
     [
       { :service => plugin.service + ' % free', :description => 'Memory usage, %', :metric => fraction.round(2) * 100 },
       { :service => plugin.service + ' % swap', :description => 'Swap usage, %', :metric => swap_fraction.round(2) * 100 },
