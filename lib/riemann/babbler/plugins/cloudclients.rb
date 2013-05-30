@@ -1,6 +1,6 @@
 require 'json'
 
-class Riemann::Babbler::CloudClients < Riemann::Babbler
+class Riemann::Babbler::Cloudclients < Riemann::Babbler
 
   def init
     plugin.set_default(:service, 'cloud clients')
@@ -9,17 +9,10 @@ class Riemann::Babbler::CloudClients < Riemann::Babbler
   end
 
   def collect
-
-    json = JSON.parse rest_get(plugin.url)
     clients = 0
-
-    json.each do |client|
-      client["state"] == "ESTABLISHED" ? clients += 1
-    end
-
-    [
-      {:service => plugin.service + " ESTABLISHED state", :description => "online clients in #{plugin.url}", :metric => clients, :state => 'ok' }
-    ]
+    json = JSON.parse rest_get(plugin.url)
+    json.each { |client| clients += 1 if client[1]["state"] == "ESTABLISHED" }
+    {:service => plugin.service + " established", :description => "online clients in #{plugin.url}", :metric => clients, :state => 'ok' }
   end
 
 end

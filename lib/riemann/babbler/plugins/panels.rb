@@ -20,7 +20,7 @@ class Riemann::Babbler::Panels < Riemann::Babbler
 
     [
       {:service => plugin.service + " online", :description => "online panels in #{plugin.url}", :metric => good, :state => 'ok' },
-      {:service => plugin.service + " offline", :description => "offline panels in #{plugin.url}", :metric => bad }
+      {:service => plugin.service + " offline", :description => "all panels in #{plugin.url}", :metric => bad + good, :state => 'ok' }
     ]
   end
 
