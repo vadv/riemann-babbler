@@ -19,7 +19,7 @@ class Riemann::Babbler::Nvidia < Riemann::Babbler
     hash = JSON.parse shell(plugin.cmd)
     array = Array.new
     hash.each do |info| 
-      array << { :service => plugin.service + ' memory usage', :metric => (info['memory_usage']['free'].to_f/info['memory_usage']['total'].to_i) * 100, :description => "GPU memory usage in %" }
+      array << { :service => plugin.service + ' memory usage', :metric => (1 - info['memory_usage']['free'].to_f/info['memory_usage']['total'].to_i) * 100, :description => "GPU memory usage in %" }
     end  
     array
   end
