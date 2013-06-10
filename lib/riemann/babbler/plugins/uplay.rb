@@ -7,8 +7,15 @@
 
  
 require 'json'
+require 'socket'
 
 class Riemann::Babbler::Uplay < Riemann::Babbler
+
+  def myip
+    ip = Socket.ip_address_list.detect{|intf| intf.ipv4_private?}
+    myip = ip.ip_address if ip
+    myip || '127.0.0.1'
+  end
 
   def init
     plugin.set_default(:service, 'uplay')
@@ -27,6 +34,9 @@ class Riemann::Babbler::Uplay < Riemann::Babbler
     now = Time.now.to_i
     array = Array.new
     status = JSON.parse File.read(plugin.file)
+
+    # "myip" - ip шник машинки
+    array << { :service => plugin.service + ' ipaddress', :description => "ipaddress: #{myip}", :metric => 0, :state => 'ok' }
 
     # "status_update_ts" - время последнего обновления содержимого статусного файла в unix-timestamp
     if now - status['status_update_ts'] > plugin.statuses.status_update_ts
