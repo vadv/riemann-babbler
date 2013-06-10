@@ -49,6 +49,13 @@ class Riemann::Babbler::Uplay < Riemann::Babbler
       array << { :service => plugin.service + ' enough_decoded_frames', :description => 'Uplay not cope with the load', :metric => 1, :state => 'critical' }
     end
 
+    # "enough_net_frames" - достаточно ли фреймов приходит по сети, true/false
+    if status['enough_net_frames']
+      array << { :service => plugin.service + ' enough_net_frames', :description => 'status enough_net_frames ok', :metric => 0, :state => 'ok' }
+    else
+      array << { :service => plugin.service + ' enough_net_frames', :description => 'Not enough net frames to play', :metric => 1, :state => 'critical' }
+    end
+
     array << { :service => plugin.service + ' player_state', :description => "current player state: #{status['player_state']}", :metric => 0, :state => 'ok' }
 
     array
