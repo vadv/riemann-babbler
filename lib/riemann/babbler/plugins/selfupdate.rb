@@ -8,7 +8,7 @@ class Riemann::Babbler::Selfupdate < Riemann::Babbler
   end
 
   def collect
-    json = JSON.parse File.read(plugin.url)
+    json = JSON.parse File.read(plugin.file)
     if json["status"] == "ok"
       {:service => plugin.service, :description => "Self update status in #{plugin.file}, state: OK", :metric => 1, :state => 'ok' }
     else
