@@ -15,7 +15,7 @@ class Riemann::Babbler::Mpeg2lander < Riemann::Babbler
       stream['programs'].each do |programm|
         next unless programm['time_tracker']
         next unless programm['time_tracker']['current_time']
-        timing = programm['time_tracker']['current_time'].split('diff')[1].to_i
+        timing = abs(programm['time_tracker']['current_time'].split('diff')[1].to_i)
         array << { :service => plugin.service + " status #{programm['name']}", :metric => timing.to_i, :description => "Mpeg2lander timming name #{programm['name']}" }
       end # end programm
     end # end stream
