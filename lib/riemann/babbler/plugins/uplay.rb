@@ -32,7 +32,7 @@ class Riemann::Babbler::Uplay < Riemann::Babbler
 
 
   def collect
-    now = Time.now.to_i
+    now = unixnow
     array = Array.new
     status = JSON.parse File.read(plugin.file)
 

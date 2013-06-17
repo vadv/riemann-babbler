@@ -74,5 +74,10 @@ module Riemann
       end
     end
 
+    # unix timestamp
+    def unixnow
+      Time.now.to_i
+    end
+
   end
 end
