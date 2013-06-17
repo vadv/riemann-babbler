@@ -15,7 +15,7 @@ class Riemann::Babbler::Sdigrabber < Riemann::Babbler
       box['processors'].each do |processor, processor_options|
         next unless processor =~ /Proc\s+encoder/
         next unless processor_options['setup']['last-unit-pts']
-        timing = unixnow - processor_options['setup']['last-unit-pts'].to_i
+        timing = (unixnow - processor_options['setup']['last-unit-pts'].to_i).abs
         cid = processor_options['setup']['cid']
         array << { :service => plugin.service + " status #{cid}", :metric => timing.to_i, :description => "Sdigrabber timming cid #{cid}" }
       end
