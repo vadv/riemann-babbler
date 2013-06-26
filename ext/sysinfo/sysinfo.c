@@ -89,11 +89,18 @@ static void	get_fs_inodes_stat(const char *fs, uint64_t *total, uint64_t *free, 
 	if (pused)
 	{
 		if (0 != s.f_files)
-			*pused = 100.0 - (double)(100.0 * s.f_bavail) /
+			*pused = 100.0 - (double)(100.0 * s.f_favail) /
 					(s.f_files);
 		else
 			*pused = 0;
 	}
+}
+
+static int	VFS_FS_INODE_PUSED(VALUE self, VALUE mount)
+{
+	uint64_t	value = 0;
+	get_fs_inodes_stat(RSTRING_PTR(mount), NULL, NULL, NULL, &value );
+	return INT2NUM(value);
 }
 
 static int	VFS_FS_INODE_USED(VALUE self, VALUE mount)
@@ -114,13 +121,6 @@ static int	VFS_FS_INODE_TOTAL(VALUE self, VALUE mount)
 {
 	uint64_t	value = 0;
 	get_fs_inodes_stat(RSTRING_PTR(mount), &value, NULL, NULL, NULL );
-	return INT2NUM(value);
-}
-
-static int	VFS_FS_INODE_PUSED(VALUE self, VALUE mount)
-{
-	uint64_t	value = 0;
-	get_fs_inodes_stat(RSTRING_PTR(mount), NULL, NULL, NULL, &value );
 	return INT2NUM(value);
 }
 
@@ -436,7 +436,7 @@ void Init_sysinfo(void) {
     "total", VFS_FS_INODE_TOTAL, 1);
 
   rb_define_singleton_method(cInode,
-    "pfree", VFS_FS_INODE_PUSED, 1);
+    "pused", VFS_FS_INODE_PUSED, 1);
 
   rb_define_singleton_method(cMem,
     "cached", VM_MEMORY_CACHED, 0);
