@@ -7,9 +7,9 @@ class Riemann::Babbler::Net < Riemann::Babbler
       iface = line.split(':')[0].strip
       iface.gsub!(/\./, '_')
       next unless line =~ /(\w*)\:\s*([\s\d]+)\s*/
-      status << { :service => "#{plugin.service} #{iface} bytes out", :metric => Net.out(iface, 'bytes'), :as_diff => true }
-      status << { :service => "#{plugin.service} #{iface} bytes in", :metric => Net.in(iface, 'bytes'), :as_diff => true }
-      status << { :service => "#{plugin.service} #{iface} bytes errors", :metric => Net.total(iface, 'errors'), :state => 'ok' }
+      status << { :service => "#{plugin.service} #{iface} bytes out", :metric => SysInfo::Net.out(iface, 'bytes'), :as_diff => true }
+      status << { :service => "#{plugin.service} #{iface} bytes in", :metric => SysInfo::Net.in(iface, 'bytes'), :as_diff => true }
+      status << { :service => "#{plugin.service} #{iface} bytes errors", :metric => SysInfo::Net.total(iface, 'errors'), :state => 'ok' }
     end
     status
   end
