@@ -86,6 +86,14 @@ static void	get_fs_inodes_stat(const char *fs, uint64_t *total, uint64_t *free, 
 		(*free)  = (uint64_t)(s.f_favail);
 	if(usage)
 		(*usage) = (uint64_t)(s.f_files - s.f_favail);
+	if (pused)
+	{
+		if (0 != s.f_files)
+			*pused = 100.0 - (double)(100.0 * s.f_bavail) /
+					(s.f_files);
+		else
+			*pused = 0;
+	}
 }
 
 static int	VFS_FS_INODE_USED(VALUE self, VALUE mount)

@@ -17,8 +17,8 @@ class Riemann::Babbler::Disk < Riemann::Babbler
     monit_points.each do |point|
       human_point = point == '/' ? '/root' : point
       human_point = human_point.gsub(/^\//, '').gsub(/\//, '_')
-      disk << { :service => plugin.service + " #{human_point} % block", :description => "Disk usage #{point}, %", :metric => SysInfo::FS::Block.pfree(point) }
-      disk << { :service => plugin.service + " #{human_point} % inode", :description => "Disk usage #{point}, inodes %", :metric => SysInfo::FS::Inode.pfree(point)}
+      disk << { :service => plugin.service + " #{human_point} % block", :description => "Disk usage #{point}, %", :metric => SysInfo::FS::Block.pused(point) }
+      disk << { :service => plugin.service + " #{human_point} % inode", :description => "Disk usage #{point}, inodes %", :metric => SysInfo::FS::Inode.pused(point)}
       disk << { :service => plugin.service + " #{human_point} abs free", :description => "Disk free #{point}, B", :metric =>  SysInfo::FS::Block.total(point), :state => 'ok'}
       disk << { :service => plugin.service + " #{human_point} abs total", :description => "Disk space #{point}, B",  :metric =>  SysInfo::FS::Inode.total(point), :state => 'ok'}
     end

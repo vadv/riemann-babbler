@@ -13,7 +13,7 @@ class Riemann::Babbler::Memory < Riemann::Babbler
       { :service => plugin.service + ' abs cached', :description => "Memory usage, cached (Bytes)",  :metric => SysInfo::Memory.cached, :state => 'ok' },
       { :service => plugin.service + ' abs buffers', :description => "Memory usage, buffers (Bytes)", :metric => SysInfo::Memory.buffers, :state => 'ok' },
       { :service => plugin.service + ' abs used', :description => "Memory usage, used (Bytes)", :metric => SysInfo::Memory.total - SysInfo::Memory.free , :state => 'ok' },
-      { :service => plugin.service + ' abs free_bc', :description => "Memory usage with cache и buffers (Bytes)\n\n #{desc}", :metric => free_bc , :state => 'ok' }
+      { :service => plugin.service + ' abs free_bc', :description => "Memory usage with cache и buffers (Bytes)", :metric => free_bc , :state => 'ok' }
     ]
   end
 
