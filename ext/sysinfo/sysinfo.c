@@ -73,7 +73,7 @@ static int	VFS_FS_PUSED(VALUE self, VALUE mount)
 
 /* ---------- INODE ---------- */
 
-static void	get_fs_inodes_stat(const char *fs, uint64_t *total, uint64_t *free, uint64_t *usage)
+static void	get_fs_inodes_stat(const char *fs, uint64_t *total, uint64_t *free, uint64_t *usage, double *pused)
 {
 	struct statvfs   s;
 	if ( statvfs( fs, &s) != 0 )
@@ -99,21 +99,28 @@ static void	get_fs_inodes_stat(const char *fs, uint64_t *total, uint64_t *free, 
 static int	VFS_FS_INODE_USED(VALUE self, VALUE mount)
 {
 	uint64_t	value = 0;
-	get_fs_inodes_stat(RSTRING_PTR(mount), NULL, NULL, &value );
+	get_fs_inodes_stat(RSTRING_PTR(mount), NULL, NULL, &value, NULL );
 	return INT2NUM(value);
 }
 
 static int	VFS_FS_INODE_FREE(VALUE self, VALUE mount)
 {
 	uint64_t	value = 0;
-	get_fs_inodes_stat(RSTRING_PTR(mount), NULL, &value, NULL );
+	get_fs_inodes_stat(RSTRING_PTR(mount), NULL, &value, NULL, NULL );
 	return INT2NUM(value);
 }
 
 static int	VFS_FS_INODE_TOTAL(VALUE self, VALUE mount)
 {
 	uint64_t	value = 0;
-	get_fs_inodes_stat(RSTRING_PTR(mount), &value, NULL, NULL );
+	get_fs_inodes_stat(RSTRING_PTR(mount), &value, NULL, NULL, NULL );
+	return INT2NUM(value);
+}
+
+static int	VFS_FS_INODE_PFREE(VALUE self, VALUE mount)
+{
+	uint64_t	value = 0;
+	get_fs_inodes_stat(RSTRING_PTR(mount), &value, NULL, NULL, NULL );
 	return INT2NUM(value);
 }
 
@@ -427,6 +434,9 @@ void Init_sysinfo(void) {
 
   rb_define_singleton_method(cInode,
     "total", VFS_FS_INODE_TOTAL, 1);
+
+  rb_define_singleton_method(cInode,
+    "pfree", VFS_FS_INODE_PFREE, 1);
 
   rb_define_singleton_method(cMem,
     "cached", VM_MEMORY_CACHED, 0);
