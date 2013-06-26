@@ -117,10 +117,10 @@ static int	VFS_FS_INODE_TOTAL(VALUE self, VALUE mount)
 	return INT2NUM(value);
 }
 
-static int	VFS_FS_INODE_PFREE(VALUE self, VALUE mount)
+static int	VFS_FS_INODE_PUSED(VALUE self, VALUE mount)
 {
 	uint64_t	value = 0;
-	get_fs_inodes_stat(RSTRING_PTR(mount), &value, NULL, NULL, NULL );
+	get_fs_inodes_stat(RSTRING_PTR(mount), NULL, NULL, NULL, &value );
 	return INT2NUM(value);
 }
 
@@ -436,7 +436,7 @@ void Init_sysinfo(void) {
     "total", VFS_FS_INODE_TOTAL, 1);
 
   rb_define_singleton_method(cInode,
-    "pfree", VFS_FS_INODE_PFREE, 1);
+    "pfree", VFS_FS_INODE_PUSED, 1);
 
   rb_define_singleton_method(cMem,
     "cached", VM_MEMORY_CACHED, 0);
