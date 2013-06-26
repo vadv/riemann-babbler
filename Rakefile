@@ -1,5 +1,5 @@
 require 'rspec/core/rake_task'
-require 'rubygems/tasks'
+require 'bundler/gem_tasks'
 
 RSpec::Core::RakeTask.new('spec')
 task :build do
