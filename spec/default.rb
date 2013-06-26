@@ -1,5 +1,6 @@
 #encoding: utf-8
 
+$: << File.dirname(__FILE__) + '/../ext/sysinfo'
 require 'riemann/babbler/plugin'
 require 'start'
 require 'configatron'

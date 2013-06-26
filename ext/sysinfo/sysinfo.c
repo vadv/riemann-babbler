@@ -93,7 +93,7 @@ static void get_fs_inodes_stat(const char *fs, int type,union  _val * val)
         	if (0 != s.f_files){
             	val->d_val = (100.0 * (s.f_files - s.f_favail)) / s.f_files;
         	} else
-            	*(double *)val = 0; 
+            	*(double *)val = 0;
             break;
   }
 }
