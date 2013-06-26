@@ -1,6 +1,6 @@
 #encoding: utf-8
 
-require 'riemann/support/plugin_helpers'
+require File.expand_path('../support/plugin_helpers', __FILE__)
 require 'riemann/client'
 require 'open3'
 require 'timeout'
@@ -9,7 +9,7 @@ require 'socket'
 require 'net/ping'
 require 'sequel'
 require 'riemann/babbler/sysinfo'
-require 'riemann/support/monkey_patches'
+require File.expand_path('../support/monkey_patches', __FILE__)
 
 
 # Базовое описание плагина
