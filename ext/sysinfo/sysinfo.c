@@ -72,56 +72,58 @@ static int	VFS_FS_PUSED(VALUE self, VALUE mount)
 }
 
 /* ---------- INODE ---------- */
+union _val {
+  unsigned long long ul_val;
+  double d_val;
+};
 
-static void	get_fs_inodes_stat(const char *fs, uint64_t *total, uint64_t *free, uint64_t *usage, double *pused)
+static void get_fs_inodes_stat(const char *fs, int type,union  _val * val)
 {
-	struct statvfs   s;
-	if ( statvfs( fs, &s) != 0 )
-	{
-		rb_raise(rb_eRuntimeError, "statvfs call");
-	}
-	if(total)
-		(*total) = (uint64_t)(s.f_files);
-	if(free)
-		(*free)  = (uint64_t)(s.f_favail);
-	if(usage)
-		(*usage) = (uint64_t)(s.f_files - s.f_favail);
-	if (pused)
-	{
-		if (0 != s.f_files + s.f_favail)
-			*pused = 100.0 - (double)(100.0 * s.f_favail) /
-					(s.f_files + s.f_favail);
-		else
-			*pused = 0;
-	}
+  struct statvfs   s;
+  if ( statvfs( fs, &s) != 0 )
+  {
+    rb_raise(rb_eRuntimeError, "statvfs call");
+  }
+  switch(type)
+  {
+    case 1: val->ul_val = (unsigned long long )(s.f_files); break;
+    case 2: val->ul_val  = (unsigned long long )(s.f_favail); break;
+    case 3: val->ul_val = (unsigned long long )(s.f_files - s.f_favail); break;
+    case 4:
+        	if (0 != s.f_files){
+            	val->d_val = (100.0 * (s.f_files - s.f_favail)) / s.f_files;
+        	} else
+            	*(double *)val = 0; 
+            break;
+  }
 }
 
 static int	VFS_FS_INODE_PUSED(VALUE self, VALUE mount)
 {
-	uint64_t	value = 0;
-	get_fs_inodes_stat(RSTRING_PTR(mount), NULL, NULL, NULL, &value );
-	return rb_float_new(value);
+	union _val val;
+	get_fs_inodes_stat(RSTRING_PTR(mount), 4, &val );
+	return rb_float_new(val.d_val);
 }
 
 static int	VFS_FS_INODE_USED(VALUE self, VALUE mount)
 {
-	uint64_t	value = 0;
-	get_fs_inodes_stat(RSTRING_PTR(mount), NULL, NULL, &value, NULL );
-	return INT2NUM(value);
+	union _val val;
+	get_fs_inodes_stat(RSTRING_PTR(mount), 3, &val );
+	return INT2NUM(val.ul_val);
 }
 
 static int	VFS_FS_INODE_FREE(VALUE self, VALUE mount)
 {
-	uint64_t	value = 0;
-	get_fs_inodes_stat(RSTRING_PTR(mount), NULL, &value, NULL, NULL );
-	return INT2NUM(value);
+	union _val val;
+	get_fs_inodes_stat(RSTRING_PTR(mount), 2, &val );
+	return INT2NUM(val.ul_val);
 }
 
 static int	VFS_FS_INODE_TOTAL(VALUE self, VALUE mount)
 {
-	uint64_t	value = 0;
-	get_fs_inodes_stat(RSTRING_PTR(mount), &value, NULL, NULL, NULL );
-	return INT2NUM(value);
+	union _val val;
+	get_fs_inodes_stat(RSTRING_PTR(mount), 1, &val );
+	return INT2NUM(val.ul_val);
 }
 
 /*  End FS Part  */
