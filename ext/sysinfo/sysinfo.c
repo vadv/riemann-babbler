@@ -89,8 +89,7 @@ static void	get_fs_inodes_stat(const char *fs, uint64_t *total, uint64_t *free, 
 	if (pused)
 	{
 		if (0 != s.f_files)
-			*pused = 100.0 - (double)(100.0 * s.f_favail) /
-					(s.f_files);
+			*pused = (double)(100.0 * s.f_favail) / (s.f_files);
 		else
 			*pused = 0;
 	}
