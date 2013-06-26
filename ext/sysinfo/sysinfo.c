@@ -61,7 +61,7 @@ static int	VFS_FS_PFREE(VALUE self, VALUE mount)
 {
 	double	value = 0;
 	get_fs_size_stat(RSTRING_PTR(mount), NULL, NULL, NULL, &value, NULL);
-	return INT2NUM(value);
+	return rb_float_new(value);
 }
 
 static int	VFS_FS_PUSED(VALUE self, VALUE mount)
@@ -100,7 +100,7 @@ static int	VFS_FS_INODE_PUSED(VALUE self, VALUE mount)
 {
 	uint64_t	value = 0;
 	get_fs_inodes_stat(RSTRING_PTR(mount), NULL, NULL, NULL, &value );
-	return INT2NUM(value);
+	return rb_float_new(value);
 }
 
 static int	VFS_FS_INODE_USED(VALUE self, VALUE mount)
