@@ -8,12 +8,15 @@ require 'rest_client'
 require 'socket'
 require 'net/ping'
 require 'sequel'
+require 'riemann/babbler/sysinfo'
 require File.expand_path('../support/monkey_patches', __FILE__)
 
 
 # Базовое описание плагина
 module Riemann
   class Babbler
+
+    include SysInfo
 
     def self.registered_plugins
       @plugins ||= []
