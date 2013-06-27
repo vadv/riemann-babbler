@@ -56,6 +56,9 @@ plugins:
   megacli:
     service: megacli
 
+  twcli:
+    service: tw_cli
+
   nginx:
     service: nginx
 
