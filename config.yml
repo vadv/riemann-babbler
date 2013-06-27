@@ -57,7 +57,7 @@ plugins:
     service: megacli
 
   twcli:
-    service: tw_cli
+    interval: 300
 
   nginx:
     service: nginx
