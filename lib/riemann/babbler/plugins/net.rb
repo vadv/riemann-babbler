@@ -1,21 +1,5 @@
 class Riemann::Babbler::Net < Riemann::Babbler
 
-  WORDS = ['rx bytes',
-           'rx packets',
-           'rx errs',
-           'rx drop',
-           'rx fifo',
-           'rx frame',
-           'rx compressed',
-           'rx multicast',
-           'tx bytes',
-           'tx packets',
-           'tx drops',
-           'tx fifo',
-           'tx colls',
-           'tx carrier',
-           'tx compressed']
-
   def collect
     f = File.read('/proc/net/dev')
     status = Array.new
@@ -23,13 +7,9 @@ class Riemann::Babbler::Net < Riemann::Babbler
       iface = line.split(':')[0].strip
       iface.gsub!(/\./, '_')
       next unless line =~ /(\w*)\:\s*([\s\d]+)\s*/
-      WORDS.map do |service|
-        "#{plugin.service} #{iface} #{service}"
-      end.zip(
-        $2.split(/\s+/).map { |str| str.to_i }
-      ).each do |service, value|
-        status << { :service => service, :metric => value, :as_diff => true}
-      end
+      status << { :service => "#{plugin.service} #{iface} bytes out", :metric => SysInfo::Net.out(iface, 'bytes'), :as_diff => true }
+      status << { :service => "#{plugin.service} #{iface} bytes in", :metric => SysInfo::Net.in(iface, 'bytes'), :as_diff => true }
+      status << { :service => "#{plugin.service} #{iface} bytes errors", :metric => SysInfo::Net.total(iface, 'errors'), :state => 'ok' }
     end
     status
   end

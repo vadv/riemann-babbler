@@ -8,6 +8,7 @@ require 'rest_client'
 require 'socket'
 require 'net/ping'
 require 'sequel'
+require 'riemann/babbler/sysinfo'
 require File.expand_path('../support/monkey_patches', __FILE__)
 
 
@@ -64,7 +65,11 @@ module Riemann
 
     def report_with_diff(event)
       current_metric = event[:metric]
-      event[:metric] = current_metric - @storage[ event[:service] ] if @storage.has_key? event[:service]
+      if @storage.has_key?(event[:service])
+        next if @storage[ event[:service] ].nil?
+        next if current_metric + @storage[ event[:service] ] > 2**64
+        event[:metric] = current_metric - @storage[ event[:service] ]
+      end
       @storage[ event[:service] ] = current_metric
       event.delete(:as_diff)
       report(event)

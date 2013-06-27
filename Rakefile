@@ -1,1 +1,14 @@
+require 'rspec/core/rake_task'
 require 'bundler/gem_tasks'
+
+RSpec::Core::RakeTask.new('spec')
+task :build do
+  Dir.chdir('ext/sysinfo') do
+    output = `ruby extconf.rb`
+    raise output unless $? == 0
+    output = `make`
+    raise output unless $? == 0
+  end
+end
+
+task :spec => :build

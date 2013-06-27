@@ -2,9 +2,6 @@
 
 class Riemann::Babbler::Disk < Riemann::Babbler
 
-  require 'sys/filesystem'
-  include Sys
-
   NOT_MONITORING_FS = %w(sysfs nfs devpts squashfs proc devtmpfs)
 
   def collect
@@ -18,13 +15,12 @@ class Riemann::Babbler::Disk < Riemann::Babbler
     end
     disk = Array.new
     monit_points.each do |point|
-      point_stat = Filesystem.stat point
       human_point = point == '/' ? '/root' : point
       human_point = human_point.gsub(/^\//, '').gsub(/\//, '_')
-      disk << { :service => plugin.service + " #{human_point} % block", :description => "Disk usage #{point}, %", :metric => (1- point_stat.blocks_available.to_f/point_stat.blocks).round(2) * 100 } unless point_stat.blocks == 0
-      disk << { :service => plugin.service + " #{human_point} % inode", :description => "Disk usage #{point}, inodes %", :metric => (1 - point_stat.files_available.to_f/point_stat.files).round(2) * 100 } unless point_stat.files == 0
-      disk << { :service => plugin.service + " #{human_point} abs free", :description => "Disk free #{point}, B", :metric =>  point_stat.blocks_free * point_stat.block_size, :state => 'ok'}
-      disk << { :service => plugin.service + " #{human_point} abs total", :description => "Disk space #{point}, B",  :metric =>  point_stat.blocks * point_stat.block_size, :state => 'ok'}
+      disk << { :service => plugin.service + " #{human_point} % block", :description => "Disk usage #{point}, %", :metric => SysInfo::FS::Block.pused(point) }
+      disk << { :service => plugin.service + " #{human_point} % inode", :description => "Disk usage #{point}, inodes %", :metric => SysInfo::FS::Inode.pused(point)}
+      disk << { :service => plugin.service + " #{human_point} abs free", :description => "Disk free #{point}, B", :metric =>  SysInfo::FS::Block.total(point), :state => 'ok'}
+      disk << { :service => plugin.service + " #{human_point} abs total", :description => "Disk space #{point}, B",  :metric =>  SysInfo::FS::Inode.total(point), :state => 'ok'}
     end
     disk
   end

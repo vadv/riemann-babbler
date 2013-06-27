@@ -1,5 +1,13 @@
 [![Build Status](https://travis-ci.org/vadv/riemann-babbler.png)](https://travis-ci.org/vadv/riemann-babbler)
 
+### Beware!
+Currently I'm working on c-ext from zabbix. 
+It's not all fully working :)
+Use stable gem please!
+```
+gem "riemann-babbler", "~> 1.0.7.3"
+```
+
 ### Install
 ```
 gem install riemann-babbler
