@@ -1,4 +1,4 @@
-class Riemann::Babbler::Netstat < Riemann::Babbler
+class Riemann::Babbler::NetStat < Riemann::Babbler
 
   def init
     plugin.set_default(:service, 'netstat')

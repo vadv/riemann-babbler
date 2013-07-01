@@ -40,7 +40,6 @@ plugins:
 
   net:
     service: net
-    interval: 60
 
   cpufan:
     service: cpufan

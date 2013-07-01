@@ -1,6 +1,6 @@
-#encoding: utf-8
+# encoding: utf-8
 
-require File.expand_path('../support/plugin_helpers', __FILE__)
+require 'riemann/babbler/support/plugin_helpers'
 require 'riemann/client'
 require 'open3'
 require 'timeout'
@@ -8,8 +8,7 @@ require 'rest_client'
 require 'socket'
 require 'net/ping'
 require 'sequel'
-require 'riemann/babbler/sysinfo'
-require File.expand_path('../support/monkey_patches', __FILE__)
+require 'riemann/babbler/support/monkey_patches'
 
 
 # Базовое описание плагина
@@ -66,9 +65,9 @@ module Riemann
     def report_with_diff(event)
       current_metric = event[:metric]
       if @storage.has_key?(event[:service])
-        next if @storage[ event[:service] ].nil?
-        next if current_metric + @storage[ event[:service] ] > 2**64
-        event[:metric] = current_metric - @storage[ event[:service] ]
+        unless current_metric + @storage[event[:service]] > 2**64
+          event[:metric] = current_metric - @storage[event[:service]]
+        end unless @storage[event[:service]].nil?
       end
       @storage[ event[:service] ] = current_metric
       event.delete(:as_diff)
@@ -101,7 +100,7 @@ module Riemann
       if plugin.run.nil?
         true
       else
-        plugin.run == true ? true : false
+        plugin.run ? true : false
       end
     end
 

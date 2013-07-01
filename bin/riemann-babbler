@@ -1,11 +1,12 @@
 #!/usr/bin/env ruby
-#encoding: utf-8
+# coding: utf-8
 
 require 'trollop'
 require 'configatron'
 
-require File.expand_path('../../lib/riemann/version', __FILE__)
-require File.expand_path('../../lib/start', __FILE__)
+$:.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
+require 'riemann/babbler/version'
+require 'riemann/babbler/start'
 
 opts = Trollop::options do
   version "Riemann babbler #{Riemann::Babbler::VERSION}"

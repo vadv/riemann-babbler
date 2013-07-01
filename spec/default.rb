@@ -1,8 +1,7 @@
 #encoding: utf-8
 
-$: << File.dirname(__FILE__) + '/../ext/sysinfo'
-require 'riemann/babbler/plugin'
-require 'start'
+require 'riemann/babbler'
+require 'riemann/babbler/start'
 require 'configatron'
 
 opts = Hash.new

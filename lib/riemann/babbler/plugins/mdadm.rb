@@ -14,8 +14,8 @@ class Riemann::Babbler::Mdadm < Riemann::Babbler
     file = File.read('/proc/mdstat').split("\n")
     status = Array.new
     file.each_with_index do |line, index|
-      next unless line.include? "_"
-      device = file[index-1].split(":")[0].strip
+      next unless line.include? '_'
+      device = file[index-1].split(':')[0].strip
       status << { :service => plugin.service + " #{device}", :metric => 1, :description => "mdadm failed device #{device}" }
     end
     status

@@ -55,8 +55,9 @@ module Riemann
           end
         end
       rescue Timeout::Error
+        return false
       end
-      return false
+      false
     end
 
     # http rest

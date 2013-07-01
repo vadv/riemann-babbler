@@ -1,16 +1,8 @@
 class Riemann::Babbler::Nginx < Riemann::Babbler
 
-    NGINX_STATUS_1 = [
-      'accepts',
-      'handled',
-      'requests'
-    ]
+    NGINX_STATUS_1 = %W(accepts handled requests)
 
-    NGINX_STATUS_2 = [
-      'reading',
-      'writing',
-      'waiting'
-    ]
+    NGINX_STATUS_2 = %W(reading writing waiting)
 
   def init
     plugin.set_default(:service, 'nginx')
@@ -30,7 +22,7 @@ class Riemann::Babbler::Nginx < Riemann::Babbler
       status << { :service => plugin.service + " #{NGINX_STATUS_1[index]}", :metric => value.to_i, :as_diff => true }
     end
     # line[0]: Active connections: XXXX
-    status << { :service => plugin.service + " active", :metric => lines[0].split(":")[1].strip.to_i }
+    status << { :service => plugin.service + ' active', :metric => lines[0].split(':')[1].strip.to_i }
     # lines[3]: Reading: 0 Writing: 1 Waiting: 0
     lines[3].scan(/\d+/).each_with_index do |value, index|
       status << { :service => plugin.service + " #{NGINX_STATUS_2[index]}", :metric => value.to_i }

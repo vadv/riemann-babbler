@@ -1,4 +1,4 @@
-class Riemann::Babbler::Cpufan < Riemann::Babbler
+class Riemann::Babbler::CpuFan < Riemann::Babbler
 
   def init
     plugin.set_default(:service, 'cpufan')
@@ -13,7 +13,7 @@ class Riemann::Babbler::Cpufan < Riemann::Babbler
   end
 
   def collect
-    { :service => plugin.service, :metric => shell(plugin.cmd).to_i, :description => "CPU Fan Speed" }
+    { :service => plugin.service, :metric => shell(plugin.cmd).to_i, :description => 'CPU Fan Speed'}
   end
 
 end

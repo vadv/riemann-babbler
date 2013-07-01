@@ -2,8 +2,8 @@ require 'yaml'
 require 'logger'
 require 'resolv'
 
-require File.expand_path('../riemann/babbler/support/deep_merge', __FILE__)
-require File.expand_path('../riemann/babbler/plugin', __FILE__)
+require 'riemann/babbler/support/deep_merge'
+require 'riemann/babbler'
 
 class Riemann::Babbler::Starter
 
@@ -37,7 +37,7 @@ class Riemann::Babbler::Starter
       logger.warn "Can't load config file #{opts[:config]}"
       Hash.new
     end
-    config_default = YAML.load_file( File.expand_path('../../config.yml', __FILE__) )
+    config_default = YAML.load_file( File.expand_path('../../../../config.yml', __FILE__) )
     config_from_file = config_default.deep_merge( config_file )
     config.configure_from_hash config_from_file
   end
@@ -61,7 +61,7 @@ class Riemann::Babbler::Starter
 
   def load_plugins
     plugins = Array.new
-    default_plugins_dir = File.expand_path('../riemann/babbler/plugins/', __FILE__)
+    default_plugins_dir = File.expand_path('../plugins/', __FILE__)
     Dir.glob( default_plugins_dir + '/*.rb') do |file|
       plugins <<  file
     end

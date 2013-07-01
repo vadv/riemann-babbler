@@ -2,4 +2,3 @@ pkg/
 .idea
 .rvmrc
 *.swp
-Makefile

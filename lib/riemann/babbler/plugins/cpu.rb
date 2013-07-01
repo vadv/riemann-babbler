@@ -2,13 +2,17 @@
 
 class Riemann::Babbler::Cpu < Riemann::Babbler
 
+  def desc
+    "#{shell('ps -eo pcpu,pid,cmd --sort -pcpu | head -3').chomp}"
+  end
+
   def init
     @old_cpu = Hash.new
   end
 
   def collect
     array = Array.new
-    description = 'Cpu usage'
+    description = desc
     File.read('/proc/stat').split("\n").each do |cpu_line|
 
       # проверяем есть строчка /cpu\d+/ или /cpu / и сграбливаем это в переменную

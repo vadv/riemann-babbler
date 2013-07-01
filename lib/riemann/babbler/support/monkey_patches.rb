@@ -1,9 +1,9 @@
 module Beefcake
   class Buffer
     
-    def initialize(buf="")
+    def initialize(buf='')
       if buf.respond_to?(:force_encoding)
-        self.buf = buf.force_encoding("BINARY")
+        self.buf = buf.force_encoding('BINARY')
       else
         self.buf = buf
       end
@@ -12,7 +12,7 @@ module Beefcake
     def append_string(s)
       append_uint64(s.length)
       if s.respond_to?(:force_encoding)
-        self << s.force_encoding("BINARY")
+        self << s.force_encoding('BINARY')
       else
         self << s
       end
