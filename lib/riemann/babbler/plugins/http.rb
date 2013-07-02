@@ -24,9 +24,9 @@ class Riemann::Babbler::Http < Riemann::Babbler
     command += " --max-time #{plugin.max_time} --fail"
     command += " #{plugin.url} -o /dev/null"
 
-    out = shell(command)
+    out = shell(command).to_i
 
-    if out.to_i != plugin.http_code
+    if out != plugin.http_code
       metric = 1
     else
       metric = 0

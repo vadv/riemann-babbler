@@ -1,8 +1,7 @@
 class Riemann::Babbler::Nginx < Riemann::Babbler
 
-    NGINX_STATUS_1 = %W(accepts handled requests)
-
-    NGINX_STATUS_2 = %W(reading writing waiting)
+  NGINX_STATUS_1 = %W(accepts handled requests)
+  NGINX_STATUS_2 = %W(reading writing waiting)
 
   def init
     plugin.set_default(:service, 'nginx')

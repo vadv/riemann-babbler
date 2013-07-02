@@ -19,10 +19,12 @@ class Riemann::Babbler::Runit < Riemann::Babbler
       stat_file = File.join(srv, 'supervise', 'stat')
       next unless File.exists? stat_file
       if File.read( stat_file ).strip == 'run'
-        @status_history.delete 'human_srv'
+        @status_history.delete human_srv
         status << {:service => plugin.service + human_srv , :state => 'ok', :description => "runit service #{human_srv} running"}
       else
-        status << {:service => plugin.service + human_srv , :state => 'critical', :description => "runit service #{human_srv} not running"} if @status_history.include? human_srv 
+        if @status_history.include? human_srv 
+          status << {:service => plugin.service + human_srv , :state => 'critical', :description => "runit service #{human_srv} not running"}
+        end
         @status_history << human_srv unless @status_history.include? human_srv
       end
     end
