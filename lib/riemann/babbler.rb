@@ -7,7 +7,7 @@ require 'timeout'
 require 'rest_client'
 require 'socket'
 require 'net/ping'
-require 'sequel'
+require 'file/tail'
 require 'riemann/babbler/support/monkey_patches'
 
 

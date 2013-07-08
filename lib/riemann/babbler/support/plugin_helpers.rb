@@ -43,6 +43,25 @@ module Riemann
       end
     end
 
+    def file_grep(filename, regexp, max_lines=100)
+      readed_lines = 0
+      lines = Array.new
+      begin
+        Timeout::timeout(plugin_timeout) do
+          File::Tail::Logfile.open(file, :backward => 0) do |log|
+            log.tail do |line|
+              readed_lines += 1
+              lines << line if line.match?(regexp)
+              return lines if readed_lines >= max_lines
+            end
+          end
+        end
+      rescue => e
+        helper_error("#{e.class} #{e}\n#{e.backtrace.join "\n"}")
+      end
+      return lines
+    end
+
     def tcp_port_aviable?(ip, port)
       begin
         Timeout::timeout(plugin_timeout) do
