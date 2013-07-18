@@ -6,7 +6,7 @@ class Riemann::Babbler::StatusFile < Riemann::Babbler
     plugin.set_default(:file, '/var/tmp/error.txt')
     plugin.set_default(:interval, 60)
     plugin.set_default(:max_lines, 100)
-    plugin.set_default(:, 5)
+    plugin.set_default(:report_lines, 5)
   end
 
   def collect
