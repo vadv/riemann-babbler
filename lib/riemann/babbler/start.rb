@@ -140,7 +140,7 @@ class Riemann::Babbler::Starter
   def start_plugins!
     plugin_threads = started_plugins.map do |plugin|
       Thread.new {
-        logger.info "Start plugin #{plugin}"
+        logger.unknown "Start plugin #{plugin}"
         plugin.new( config, logger, $riemann ).run
       }
     end
