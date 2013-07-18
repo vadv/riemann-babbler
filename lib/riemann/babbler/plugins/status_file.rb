@@ -10,6 +10,7 @@ class Riemann::Babbler::StatusFile < Riemann::Babbler
   end
 
   def collect
+    return [] unless File.exists? plugin.file
     content = File.read(plugin.file).split("\n").delete_if {|x| x.strip.empty? }
     {
         :service => plugin.service + " #{plugin.file}",
