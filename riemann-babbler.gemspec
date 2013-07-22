@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.add_dependency('rest-client')
   s.add_dependency('net-ping')
   s.add_dependency('file-tail')
+  s.add_dependency('sys-proctable')
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")

@@ -38,6 +38,7 @@ GEM
     slop (3.4.3)
     sys-filesystem (1.1.0)
       ffi
+    sys-proctable (0.9.3)
     tins (0.8.0)
     trollop (2.0)
     yamler (0.1.0)
@@ -57,4 +58,5 @@ DEPENDENCIES
   riemann-client
   rspec
   sys-filesystem
+  sys-proctable
   trollop

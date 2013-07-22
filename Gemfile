@@ -8,6 +8,7 @@ gem 'sys-filesystem'
 gem 'rest-client'
 gem 'net-ping'
 gem 'file-tail'
+gem 'sys-proctable'
 
 gem 'rspec'
 gem 'rake'
