@@ -16,10 +16,20 @@ class Riemann::Babbler::Mdadm < Riemann::Babbler
     file.each_with_index do |line, index|
       next unless line.include? '_'
       device = file[index-1].split(':')[0].strip
-      status << { :service => plugin.service + " #{device}", :metric => 1, :description => "mdadm failed device #{device}" }
+      status << { :service => plugin.service + " #{device}", :metric => 1, :description => "mdadm failed device #{device}: #{get_failed_parts(device)}" }
     end
     status
   end
 
-end
+  def get_failed_parts (device)
+    failed_parts = []
+    Dir["/sys/block/#{device}/md/dev-*"].each do |p|
+      state = File.read("#{p}/state").strip
+      next unless state != "in_sync"
+      p.gsub!(/.+\/dev-/,"")
+      failed_parts << "#{p} (#{state})"
+    end
+    failed_parts.join(", ")
+  end
 
+end
