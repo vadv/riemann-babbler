@@ -2,7 +2,7 @@ class Riemann::Babbler::TwCli < Riemann::Babbler
 
   def init
     plugin.set_default(:service, 'twcli')
-    plugin.set_default(:cmd, "/usr/sbin/tw_cli /$(/usr/sbin/tw_cli show | grep ^c | cut -f1 -d' ') show | egrep '^[upb]' | grep -v ' OK ' | grep -v ' VERIFYING ' | grep -v ' VERIFY-PAUSED ' | wc -l")
+    plugin.set_default(:cmd, "/usr/sbin/tw_cli show | awk '/^c/{print $1}' | xargs -rI{} /usr/sbin/tw_cli /{} show | awk '/^[upb]/&&!/[ \t](OK|VERIFYING|VERIFY-PAUSED)/' |wc -l")
     plugin.states.set_default(:critical, 1)
     plugin.set_default(:interval, 300)
   end
