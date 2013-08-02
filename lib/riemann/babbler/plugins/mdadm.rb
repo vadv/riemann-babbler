@@ -22,14 +22,18 @@ class Riemann::Babbler::Mdadm < Riemann::Babbler
   end
 
   def get_failed_parts (device)
-    failed_parts = []
-    Dir["/sys/block/#{device}/md/dev-*"].each do |p|
-      state = File.read("#{p}/state").strip
-      next unless state != "in_sync"
-      p.gsub!(/.+\/dev-/,"")
-      failed_parts << "#{p} (#{state})"
+    begin
+      failed_parts = []
+      Dir["/sys/block/#{device}/md/dev-*"].each do |p|
+        state = File.read("#{p}/state").strip
+        next unless state != "in_sync"
+        p.gsub!(/.+\/dev-/,"")
+        failed_parts << "#{p} (#{state})"
+      end
+      failed_parts.join(", ")
+    rescue
+      nil
     end
-    failed_parts.join(", ")
   end
 
 end
