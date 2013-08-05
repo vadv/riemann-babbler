@@ -12,9 +12,11 @@ class Riemann::Babbler::Disk < Riemann::Babbler
     # точнее выбираем из mounts только те, у которых fstype не попадает
     # в NOT_MONITORING_FS
     monit_points = [] 
-    File.read('/proc/mounts').split("\n").each do |line|
-      mtab = line.split(/\s+/)
-      monit_points << mtab[1] unless NOT_MONITORING_FS.include? mtab[2] 
+    File.open('/proc/mounts', 'r') do |file|
+      while (line = file.gets)
+        mtab = line.split(/\s+/)
+        monit_points << mtab[1] unless NOT_MONITORING_FS.include? mtab[2] 
+      end
     end
     disk = Array.new
     monit_points.each do |point|
