@@ -105,6 +105,7 @@ module Riemann
     end
 
     # Переодически вызываемое действие
+    def tick
       posted_array = collect
       posted_array = posted_array.class == Array ? posted_array : [ posted_array ]
       posted_array.uniq.each { |event| report event }
