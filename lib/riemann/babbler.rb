@@ -105,7 +105,6 @@ module Riemann
     end
 
     # Переодически вызываемое действие
-    def tick
       posted_array = collect
       posted_array = posted_array.class == Array ? posted_array : [ posted_array ]
       posted_array.uniq.each { |event| report event }
@@ -121,7 +120,10 @@ module Riemann
       t0 = Time.now
       loop do
         begin
-          tick
+          Timeout::timeout( plugin.interval ) { tick }
+        rescue TimeoutError
+          report({:state => 'critical', :service => plugin.service, :description => 'Broken plugin: deadlock'})
+          logger.error "Plugin #{self.class.name} timed out!"
         rescue => e
           logger.error "Plugin #{self.class.name} : #{e.class} #{e}\n#{e.backtrace.join "\n"}"
         end
