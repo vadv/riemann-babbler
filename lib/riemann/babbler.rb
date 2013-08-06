@@ -138,6 +138,8 @@ module Riemann
       return 'critical' if my_state.nil?
       if plugin.states.warning.nil?
         my_state >= plugin.states.critical ? 'critical' : 'ok'
+      elsif plugin.states.critical.nil?
+        my_state >= plugin.states.warning ? 'warning' : 'ok'
       else
         case
           when my_state.between?(plugin.states.warning, plugin.states.critical)
