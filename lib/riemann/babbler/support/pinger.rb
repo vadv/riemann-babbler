@@ -15,5 +15,3 @@ t = Thread.new {
     client.close
   }
 }
-
-t.join
