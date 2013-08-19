@@ -28,6 +28,7 @@ class Riemann::Babbler::Starter
     set_logger_lvl
     load_plugins
     $riemann = get_riemann
+    Riemann::Responder.new.start
     start_plugins!
   end
 
