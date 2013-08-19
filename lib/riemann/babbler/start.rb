@@ -4,7 +4,7 @@ require 'resolv'
 
 require 'riemann/babbler/support/deep_merge'
 require 'riemann/babbler'
-require 'riemann/babbler/support/pinger'
+require 'riemann/babbler/support/responder'
 
 class Riemann::Babbler::Starter
 
