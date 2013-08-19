@@ -1,6 +1,7 @@
 #encoding: utf-8
 
 require 'riemann/babbler'
+require 'riemann/babbler/version'
 require 'riemann/babbler/start'
 require 'configatron'
 
