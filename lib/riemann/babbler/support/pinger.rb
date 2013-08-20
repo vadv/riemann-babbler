@@ -3,24 +3,20 @@ require 'json'
 
 class Riemann::Responder
 
-  def info
-    {
+  INFO = {
       :version => Riemann::Babbler::VERSION,
-      :ruby => "#{RUBY_VERSION}-#{RUBY_PATCHLEVEL}",
-      :uptime => (Time.now.to_i - @started_at)
-    }.to_json
-  end
+      :ruby => "#{RUBY_VERSION}-#{RUBY_PATCHLEVEL}"
+  }.freeze
 
   def initialize( port = 55755 )
     @port = port
-    @started_at = Time.now.to_i
   end
 
   def start
     @worker_thread = Thread.new {
       Socket.tcp_server_loop(@port) do |sock, _|
         begin
-          sock.puts info
+          sock.puts INFO.to_json
         ensure
           sock.close
         end
@@ -34,5 +30,4 @@ class Riemann::Responder
       @worker_thread = nil
     end
   end
-
 end
