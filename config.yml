@@ -5,6 +5,8 @@ riemann:
   interval: 60 # update interval for all plugins 
   use_fqdn: true
   test_connect_on_start: true
+  responder:
+    port: 55755
 
 logger:
   level: DEBUG

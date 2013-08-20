@@ -4,7 +4,7 @@ require 'resolv'
 
 require 'riemann/babbler/support/deep_merge'
 require 'riemann/babbler'
-require 'riemann/babbler/support/pinger'
+require 'riemann/babbler/support/responder'
 
 class Riemann::Babbler::Starter
 
@@ -28,7 +28,7 @@ class Riemann::Babbler::Starter
     set_logger_lvl
     load_plugins
     $riemann = get_riemann
-    Riemann::Responder.new.start
+    Riemann::Responder.new(@config.riemann.responder.port, logger).start
     start_plugins!
   end
 
