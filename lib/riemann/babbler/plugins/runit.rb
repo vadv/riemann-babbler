@@ -21,8 +21,8 @@ class Riemann::Babbler::Runit < Riemann::Babbler
   def read_run_status
     status = Array.new
     Dir.glob('/etc/service/*').each do |srv|
-      next if plugin.not_monit.include? srv
       human_srv = ' ' + srv.gsub(/\/etc\/service\//, '')
+      next if plugin.not_monit.include? human_srv
       stat_file = File.join(srv, 'supervise', 'stat')
       next unless File.exists? stat_file
       srv_uptime = uptime(srv)
