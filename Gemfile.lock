@@ -3,6 +3,7 @@ GEM
   specs:
     awesome_print (1.1.0)
     beefcake (0.3.7)
+    blankslate (2.1.2.4)
     coderay (1.0.9)
     configatron (2.10.0)
       yamler (>= 0.1.0)
@@ -14,8 +15,12 @@ GEM
     method_source (0.8.1)
     mime-types (1.21)
     mtrc (0.0.4)
+    net-http-server (0.2.2)
+      parslet (~> 1.0)
     net-ping (1.6.0)
       ffi (>= 1.0.0)
+    parslet (1.5.0)
+      blankslate (~> 2.0)
     pry (0.9.12)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
@@ -51,6 +56,7 @@ DEPENDENCIES
   configatron
   file-tail
   logger
+  net-http-server
   net-ping
   pry
   rake

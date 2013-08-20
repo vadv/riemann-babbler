@@ -9,6 +9,7 @@ gem 'rest-client'
 gem 'net-ping'
 gem 'file-tail'
 gem 'sys-proctable'
+gem 'net-http-server'
 
 gem 'rspec'
 gem 'rake'
