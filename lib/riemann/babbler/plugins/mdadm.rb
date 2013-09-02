@@ -10,6 +10,11 @@ class Riemann::Babbler::Mdadm < Riemann::Babbler
     File.exists? '/proc/mdstat'
   end
 
+  def mdadm_status_well?(text)
+    text = text.gsub('[','').gsub(']','')
+    text.gsub(/U/,'').empty?
+  end
+
   def collect 
     file = File.read('/proc/mdstat').split("\n")
     status = Array.new
@@ -19,7 +24,7 @@ class Riemann::Babbler::Mdadm < Riemann::Babbler
       device = file[index-1].split(':')[0].strip
 
       mdstatus = line.split(" ").last
-      next if mdstatus == '[UU]' # пропускаем все збс
+      next if mdadm_status_well?(mdstatus) # пропускаем все збс
       if mdstatus == plugin.states.send(device).to_s # пропускаем если стейт зафикисирован в конфиге
         status << { :service => plugin.service + " #{device}", :metric => 1, :state => 'ok', :description => "mdadm failed device #{device}, but disabled in config" }
         next
