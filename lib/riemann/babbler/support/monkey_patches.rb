@@ -22,20 +22,21 @@ module Beefcake
   end
 end
 
-class IO
-  TAIL_BUF_LENGTH = 1 << 16
-
+class File
   def tail(n)
-    return [] if n < 1
-
-    seek -TAIL_BUF_LENGTH, SEEK_END
-
-    buf = ""
-    while buf.count("\n") <= n
-      buf = read(TAIL_BUF_LENGTH) + buf
-      seek 2 * -TAIL_BUF_LENGTH, SEEK_CUR
-    end
-
-    buf.split("\n")[-n..-1]
+    buffer = 1024
+    idx = (size - buffer).abs
+    chunks = []
+    lines = 0
+    begin
+      seek(idx)
+      chunk = read(buffer)
+      lines += chunk.count("\n")
+      chunks.unshift chunk
+      idx -= buffer
+    end while lines < ( n + 1 ) && pos != 0
+    tail_of_file = chunks.join('')
+    ary = tail_of_file.split(/\n/)
+    lines_to_return = ary[ ary.size - n, ary.size - 1 ]
   end
 end
