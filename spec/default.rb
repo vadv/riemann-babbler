@@ -18,7 +18,7 @@ describe Riemann::Babbler do
   end
 
   it 'Set logger lvl' do
-    babbler.set_logger_lvl
+    babbler.set_logger_config
     babbler.logger.level.should eq 4
   end
 
