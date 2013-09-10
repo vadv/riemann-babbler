@@ -25,7 +25,7 @@ class Riemann::Babbler::Starter
 
   def start!
     merge_config
-    set_logger_lvl
+    set_logger_config
     load_plugins
     $riemann = get_riemann
     Riemann::Responder.new(@config.riemann.responder.port, logger).start
@@ -44,7 +44,7 @@ class Riemann::Babbler::Starter
     config.configure_from_hash config_from_file
   end
 
-  def set_logger_lvl
+  def set_logger_config
     case config.logger.level
     when 'INFO'
       logger.level = Logger::INFO
@@ -59,6 +59,7 @@ class Riemann::Babbler::Starter
     else
       logger.level = Logger::DEBUG
     end
+    logger.datetime_format = @config.logger.date_time_format.to_s
   end
 
   def load_plugins
