@@ -23,10 +23,8 @@ module Riemann
       registered_plugins << klass
     end
 
-    attr_reader :logger
-    attr_reader :riemann
+    attr_reader :hostname, :has_last_error, :logger, :riemann
     alias :r :riemann
-    attr_reader :hostname
 
     def initialize( configatron, logger, riemann )
       @configatron = configatron
@@ -117,20 +115,30 @@ module Riemann
 
     def run
       # выйти если run_plugin не равен true
+      # error - текущая ошибка, @has_last_error - предыдущая
+      # две переменные для того что бы не удвоить сообщения об 'ОК'
       return 0 unless run_plugin
+      error = true
       t0 = Time.now
       loop do
+
         begin
           Timeout::timeout( plugin.interval ) { tick }
         rescue TimeoutError
-          report({:state => 'critical', :service => plugin.service, :description => 'Broken plugin: deadlock'})
-          logger.error "Plugin #{self.class.name} timed out!"
+          report({:state => 'critical', :service => plugin.service + " plugin errors", :description => "Broken plugin: deadlock"})
+          logger.error("Plugin #{self.class.name} timed out!")
         rescue => e
-          logger.error "Plugin #{self.class.name} : #{e.class} #{e}\n#{e.backtrace.join "\n"}"
+          report({:state => 'critical', :service => plugin.service + " plugin errors", :description => "Plugin exception: #{e.class}\n #{e.backtrace.join "\n"}"})
+          logger.error("Plugin #{self.class.name} : #{e.class} #{e}\n#{e.backtrace.join "\n"}")
+        else
+          error = false
         end
 
+        report({:state => 'ok', :service => plugin.service + " plugin errors"}) if (not error && @has_last_error)
+        @has_last_error = error
         sleep(plugin.interval - ((Time.now - t0) % plugin.interval))
       end
+
     end
 
     # хелпер, описание статуса
