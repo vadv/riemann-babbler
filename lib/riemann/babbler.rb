@@ -62,14 +62,13 @@ module Riemann
 
     def report_with_diff(event)
       current_metric = event[:metric]
-      if @storage.has_key?(event[:service])
-        unless current_metric + @storage[event[:service]] > 2**64
-          event[:metric] = current_metric - @storage[event[:service]]
-        end unless @storage[event[:service]].nil?
+      old_metric = @storage[event[:service]]
+      if old_metric && current_metric + old_metric < 2**64
+        event[:metric] = current_metric - old_metric
+        event.delete(:as_diff)
+        report(event)
       end
-      @storage[ event[:service] ] = current_metric
-      event.delete(:as_diff)
-      report(event)
+      @storage[event[:service]] = current_metric
     end
 
     def get_hostname
