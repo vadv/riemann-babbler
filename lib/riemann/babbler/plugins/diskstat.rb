@@ -20,6 +20,10 @@ class Riemann::Babbler::Diskstat < Riemann::Babbler
     plugin.set_default(:filter, ['reads reqs', 'writes reqs', 'io reqs'])
   end
 
+  def run
+    File.exists? '/proc/diskstats'
+  end
+
   def collect
     status = Array.new
     f = File.read('/proc/diskstats')
