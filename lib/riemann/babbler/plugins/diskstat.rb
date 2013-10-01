@@ -23,7 +23,7 @@ class Riemann::Babbler::Diskstat < Riemann::Babbler
   def collect
     status = Array.new
     f = File.read('/proc/diskstats')
-    state = f.split("\n").reject { |d| d =~ /(ram|loop)/ }.inject({}) do |s, line|
+    state = f.split("\n").reject { |d| d =~ /(ram|loop| md| dm| sr)/ }.inject({}) do |s, line|
       if line =~ /^(?:\s+\d+){2}\s+([\w\d]+) (.*)$/
         dev = $1
 

@@ -67,3 +67,6 @@ plugins:
 
   runit:
     service: runit
+
+  diskstat:
+    service: diskstat
