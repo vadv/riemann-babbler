@@ -17,29 +17,30 @@ class Riemann::Babbler::Diskstat < Riemann::Babbler
   def init
     plugin.set_default(:service, 'diskstat')
     plugin.set_default(:interval, 60)
-    plugin.set_default(:filter, ['reads reqs', 'writes reqs', 'io reqs'])
+    plugin.set_default(:filter, ['reads reqs', 'writes reqs'])
   end
 
-  def run
+  def run_plugin
     File.exists? '/proc/diskstats'
   end
 
   def collect
     status = Array.new
     f = File.read('/proc/diskstats')
-    state = f.split("\n").reject { |d| d =~ /(ram|loop| md| dm| sr)/ }.inject({}) do |s, line|
+    f.split("\n").reject { |d| d =~ /(ram|loop)/ }.inject({}) do |s, line|
       if line =~ /^(?:\s+\d+){2}\s+([\w\d]+) (.*)$/
         dev = $1
-
-        WORDS.map do |service|
-          next unless plugin.filter.include?(service) #TODO hardcode
-          "#{plugin.service} #{dev} #{service}"
-        end.zip(
-          $2.split(/\s+/).map { |str| str.to_i }
-        ).each do |service, value|
-          next if service.nil? #TODO hardcode
-          status << { :service => service, :metric => value, :as_diff => true}
+        values = $2.split(/\s+/).map { |str| str.to_i }
+        # пропускаем неинтересные девайсы
+        # которые закнчиваются на число, но при этом не пропускаем xvd
+        next if !!(dev.match /\d+$/ || !(dev.match =~ /^xvd/))
+        # читаем все фильтры
+        plugin.filter.each do |filter|
+          status << { :service => "#{plugin.service} #{dev} #{filter}", :metric => values[WORDS.index(filter)], :as_diff => true}
         end
+        # добавляем iops
+        iops = values[WORDS.index('reads reqs')].to_i + values[WORDS.index('writes reqs')].to_i
+        status << { :service => "#{plugin.service} #{dev} iops", :metric => iops, :as_diff => true}
       end 
     end
     status
