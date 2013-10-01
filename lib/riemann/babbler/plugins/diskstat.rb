@@ -17,7 +17,7 @@ class Riemann::Babbler::Diskstat < Riemann::Babbler
   def init
     plugin.set_default(:service, 'diskstat')
     plugin.set_default(:interval, 60)
-    plugin.set_default(:filter, ['reads reqs', 'writes reqs'])
+    plugin.set_default(:filter, ['reads reqs', 'writes reqs', 'io reqs'])
   end
 
   def collect
