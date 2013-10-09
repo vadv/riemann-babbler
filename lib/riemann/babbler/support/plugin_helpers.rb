@@ -5,10 +5,11 @@ module Riemann
 
     def helper_error(msg = 'Unknown helper error')
       report({
-               :service => plugin.service,
-               :state => 'critical',
-               :description => msg
+        :service => plugin.service,
+        :state => 'critical',
+        :description => msg
       })
+      raise Riemann::Babbler::PluginHelperError
     end
 
     def plugin_timeout
@@ -34,7 +35,7 @@ module Riemann
       end
       if exit_status.to_i > 0
         err = err.chomp if err
-        helper_error(err)
+        helper_error("Error while running shell: " + err.to_s)
       elsif out
         return out.strip
       else

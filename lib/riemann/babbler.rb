@@ -9,6 +9,7 @@ require 'socket'
 require 'net/ping'
 require 'file/tail'
 require 'riemann/babbler/support/monkey_patches'
+require 'riemann/babbler/support/errors'
 
 
 # Базовое описание плагина
@@ -117,7 +118,7 @@ module Riemann
       # error - текущая ошибка, @has_last_error - предыдущая
       # две переменные для того что бы не удвоить сообщения об 'ОК'
       return 0 unless run_plugin
-      error = true
+      error = false
       t0 = Time.now
       loop do
 
@@ -126,11 +127,14 @@ module Riemann
         rescue TimeoutError
           report({:state => 'critical', :service => plugin.service + " plugin errors", :description => "Broken plugin: deadlock"})
           logger.error("Plugin #{self.class.name} timed out!")
+          error = true
+        rescue Riemann::Babbler::PluginHelperError
+          logger.error("Plugin helper error!")
+          error = true
         rescue => e
           report({:state => 'critical', :service => plugin.service + " plugin errors", :description => "Plugin exception: #{e.class}\n #{e.backtrace.join "\n"}"})
           logger.error("Plugin #{self.class.name} : #{e.class} #{e}\n#{e.backtrace.join "\n"}")
-        else
-          error = false
+          error = true
         end
 
         report({:state => 'ok', :service => plugin.service + " plugin errors"}) if (not error && @has_last_error)
