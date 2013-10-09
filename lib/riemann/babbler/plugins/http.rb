@@ -22,7 +22,7 @@ class Riemann::Babbler::Http < Riemann::Babbler
     command += " -w '%{http_code}\\n'"
     command += " --retry #{plugin.retry} --retry-delay #{plugin.retry_delay}"
     command += " --max-time #{plugin.max_time} --fail"
-    command += " #{plugin.url} -o /dev/null || echo 500"
+    command += " #{plugin.url} -o /dev/null || echo 'mock exit status'"
 
     out = shell(command).to_i
 
