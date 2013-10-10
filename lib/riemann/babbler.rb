@@ -24,7 +24,7 @@ module Riemann
       registered_plugins << klass
     end
 
-    attr_reader :hostname, :has_last_error, :logger, :riemann
+    attr_reader :hostname, :has_last_error, :logger, :riemann, :has_last_error
     alias :r :riemann
 
     def initialize( configatron, logger, riemann )
@@ -33,6 +33,7 @@ module Riemann
       @riemann = riemann
       @storage = Hash.new
       @hostname = get_hostname
+      @has_last_error = false
       init
       plugin.set_default(:interval, configatron.riemann.interval)
     end
@@ -137,7 +138,10 @@ module Riemann
           error = true
         end
 
-        report({:state => 'ok', :service => plugin.service + " plugin errors"}) if (not error && @has_last_error)
+        if (!error && @has_last_error)
+          report({:state => 'ok', :service => plugin.service + " plugin errors"})
+        end
+
         @has_last_error = error
         sleep(plugin.interval - ((Time.now - t0) % plugin.interval))
       end
