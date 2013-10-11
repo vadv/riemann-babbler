@@ -16,6 +16,10 @@ class Riemann::Babbler::Net < Riemann::Babbler
            'tx carrier',
            'tx compressed']
 
+  def init
+    plugin.set_default(:filter, ['rx bytes', 'rx errs', 'rx drop', 'tx bytes', 'tx errs', 'tx drop'])
+  end
+
   def collect
     f = File.read('/proc/net/dev')
     status = Array.new
