@@ -57,8 +57,8 @@ module Riemann
       end
       event[:metric] = event[:metric].round(2) if event[:metric].kind_of? Float
       # set tags
-      unless options.riemann.tags.nil?
-        event[:tags] = options.riemann.tags if event[:tags].nil?
+      if event[:tags].nil?
+        event[:tags] = options.riemann.tags unless options.riemann.tags.nil?
       end
       # set host
       event[:host] =  hostname if event[:host].nil?
