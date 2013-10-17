@@ -57,7 +57,7 @@ module Riemann
       end
       event[:metric] = event[:metric].round(2) if event[:metric].kind_of? Float
       event[:tags] = options.riemann.tags unless options.riemann.tags.nil?
-      event[:host] =  hostname
+      event[:host] =  hostname unless event[:host].nil?
       logger.debug "Report status: #{event.inspect}"
       riemann << event
     end
