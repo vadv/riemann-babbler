@@ -61,7 +61,7 @@ module Riemann
         event[:tags] = options.riemann.tags if event[:tags].nil?
       end
       # set host
-      event[:host] =  hostname unless event[:host].nil?
+      event[:host] =  hostname if event[:host].nil?
       logger.debug "Report status: #{event.inspect}"
       riemann << event
     end
