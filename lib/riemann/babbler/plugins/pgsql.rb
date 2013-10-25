@@ -37,7 +37,7 @@ class Riemann::Babbler::Plugin::Pgsql < Riemann::Babbler::Plugin
   end
 
   def rep_lag_state
-    rep_lag = abs(run_sql(plugin.rep_lag_sql).to_i)
+    rep_lag = run_sql(plugin.rep_lag_sql).to_i.abs
     if rep_lag >= plugin.rep_lag_crit
       { :service => plugin.service + ' rep_lag', :description => 'Postgresql replication lag state', :state => 'critical', :metric => rep_lag }
     elsif rep_lag >= plugin.rep_lag_warn
