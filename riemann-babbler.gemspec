@@ -25,6 +25,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'docile'
   spec.add_dependency 'configatron'
   spec.add_dependency 'net-http-server'
+  spec.add_dependency 'sys-proctable'
+  spec.add_dependency 'net-ping'
 
 
   spec.add_development_dependency 'bundler', '~> 1.3'
