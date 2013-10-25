@@ -18,6 +18,7 @@ class Riemann::Babbler::Plugin::Net < Riemann::Babbler::Plugin
 
   def init
     plugin.set_default(:service, 'net')
+    plugin.set_default(:include_alias, false)
     plugin.set_default(:filter, ['rx bytes', 'rx errs', 'rx drop', 'tx bytes', 'tx errs', 'tx drop'])
   end
 
@@ -27,6 +28,7 @@ class Riemann::Babbler::Plugin::Net < Riemann::Babbler::Plugin
     f.split("\n").each do |line|
       iface = line.split(':')[0].strip
       iface.gsub!(/\./, '_')
+      next if (iface =~ /\./ && !plugin.include_alias)
       next unless line =~ /(\w*)\:\s*([\s\d]+)\s*/
       WORDS.map do |service|
         service
@@ -34,7 +36,7 @@ class Riemann::Babbler::Plugin::Net < Riemann::Babbler::Plugin
           $2.split(/\s+/).map { |str| str.to_i }
       ).each do |service, value|
         next unless plugin.filter.include? service
-        status << { :service => "#{plugin.service} #{service} #{iface}", :metric => value, :as_diff => true }
+        status << { :service => "#{plugin.service} #{iface} #{service}", :metric => value, :as_diff => true }
       end
     end
     status
