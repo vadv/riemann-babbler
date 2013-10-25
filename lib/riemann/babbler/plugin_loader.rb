@@ -61,7 +61,7 @@ module Riemann
       end
 
       def run!
-        plugin_names_to_run = AUTO_START + opts.plugins.to_hash.keys
+        plugin_names_to_run = AUTO_START + opts.plugins.to_hash.keys.map {|name| name.to_s}
         require_all_plugins
         started_plugins = []
         Riemann::Babbler::Plugin.registered_plugins.each do |klass|
