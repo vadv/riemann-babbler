@@ -1,4 +1,4 @@
-class Riemann::Babbler::NetStat < Riemann::Babbler
+class Riemann::Babbler::Plugin::NetStat < Riemann::Babbler::Plugin
 
   def init
     plugin.set_default(:service, 'netstat')
@@ -18,16 +18,16 @@ class Riemann::Babbler::NetStat < Riemann::Babbler
       end
     end
     filter += " \\) and not dst 127.0.0.1:*"
-    cmd = "ss -t -4 -n state established " + filter + " | wc -l"
+    cmd    = 'ss -t -4 -n state established ' + filter + ' | wc -l'
     shell(cmd).to_i - 1
   end
 
   def collect
     count = get_conn_count()
     {
-      :service => "#{plugin.service} tcp #{plugin.ports.join(', ')}",
-      :metric => count, 
-      :description => "count established connects: #{count} to ports #{plugin.ports.join(', ')}"
+        :service     => "#{plugin.service} tcp #{plugin.ports.join(', ')}",
+        :metric      => count,
+        :description => "count established connects: #{count} to ports #{plugin.ports.join(', ')}"
     }
   end
 end

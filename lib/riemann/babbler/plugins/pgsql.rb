@@ -1,4 +1,4 @@
-class Riemann::Babbler::Pgsql < Riemann::Babbler
+class Riemann::Babbler::Plugin::Pgsql < Riemann::Babbler::Plugin
 
   def init
     plugin.set_default(:service, 'pgsql')
@@ -30,21 +30,21 @@ class Riemann::Babbler::Pgsql < Riemann::Babbler
 
   # connection to pg
   def connections
-    max_conn = run_sql("show max_connections").to_i
-    res_conn = run_sql("show superuser_reserved_connections").to_i
-    cur_conn = run_sql("select count(1) from pg_stat_activity;").to_i
+    max_conn = run_sql('show max_connections').to_i
+    res_conn = run_sql('show superuser_reserved_connections').to_i
+    cur_conn = run_sql('select count(1) from pg_stat_activity;').to_i
     [cur_conn, (max_conn - res_conn - cur_conn)]
   end
 
   def rep_lag_state
-    rep_lag = run_sql(plugin.rep_lag_sql).to_i
-    if rep_lag >= plugin.rep_lag_crit || rep_lag == 0
-      { :service => plugin.service + ' rep_lag', :description => "Postgresql replication lag state", :state => 'critical', :metric => rep_lag }
+    rep_lag = abs(run_sql(plugin.rep_lag_sql).to_i)
+    if rep_lag >= plugin.rep_lag_crit
+      { :service => plugin.service + ' rep_lag', :description => 'Postgresql replication lag state', :state => 'critical', :metric => rep_lag }
     elsif rep_lag >= plugin.rep_lag_warn
-      { :service => plugin.service + ' rep_lag', :description => "Postgresql replication lag state", :state => 'warning', :metric => rep_lag }
+      { :service => plugin.service + ' rep_lag', :description => 'Postgresql replication lag state', :state => 'warning', :metric => rep_lag }
     else
-      { :service => plugin.service + ' rep_lag', :description => "Postgresql replication lag state", :state => 'ok', :metric => rep_lag }
-    end    
+      { :service => plugin.service + ' rep_lag', :description => 'Postgresql replication lag state', :state => 'ok', :metric => rep_lag }
+    end
   end
 
   def collect
@@ -53,14 +53,14 @@ class Riemann::Babbler::Pgsql < Riemann::Babbler
     cur_conn, res_conn = connections
 
     status << rep_lag_state if in_recovery?
-    status << { :service => plugin.service + ' connections', :description => "Postgresql current connections", :state => 'ok', :metric => cur_conn }
+    status << { :service => plugin.service + ' connections', :description => 'Postgresql current connections', :state => 'ok', :metric => cur_conn }
 
     # check reserved pool size
     if res_conn < plugin.conn_warn
       if res_conn > plugin.conn_crit
-        status << { :service => plugin.service + ' reserved connections', :description => "Postgresql reserved connections state", :state => 'warning', :metric => res_conn }
+        status << { :service => plugin.service + ' reserved connections', :description => 'Postgresql reserved connections state', :state => 'warning', :metric => res_conn }
       else
-        status << { :service => plugin.service + ' reserved connections', :description => "Postgresql reserved connections state", :state => 'critical', :metric => res_conn }
+        status << { :service => plugin.service + ' reserved connections', :description => 'Postgresql reserved connections state', :state => 'critical', :metric => res_conn }
       end
     end
 

@@ -1,4 +1,4 @@
-class Riemann::Babbler::Nginx < Riemann::Babbler
+class Riemann::Babbler::Plugin::Nginx < Riemann::Babbler::Plugin
 
   NGINX_STATUS_1 = %W(accepts handled requests)
   NGINX_STATUS_2 = %W(reading writing waiting)
@@ -16,7 +16,7 @@ class Riemann::Babbler::Nginx < Riemann::Babbler
 
   def collect
     status = Array.new
-    lines = rest_get(plugin.status_url).split("\n")
+    lines  = rest_get(plugin.status_url).split("\n")
     lines[2].scan(/\d+/).each_with_index do |value, index|
       status << { :service => plugin.service + " #{NGINX_STATUS_1[index]}", :metric => value.to_i, :as_diff => true }
     end

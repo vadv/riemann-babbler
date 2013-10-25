@@ -1,4 +1,4 @@
-class Riemann::Babbler::StatusFile < Riemann::Babbler
+class Riemann::Babbler::Plugin::StatusFile < Riemann::Babbler::Plugin
 
   def init
     plugin.set_default(:service, 'check state file')
@@ -11,11 +11,11 @@ class Riemann::Babbler::StatusFile < Riemann::Babbler
 
   def collect
     return [] unless File.exists? plugin.file
-    content = File.read(plugin.file).split("\n").delete_if {|x| x.strip.empty? }
+    content = File.read(plugin.file).split("\n").delete_if { |x| x.strip.empty? }
     {
-        :service => plugin.service + " #{plugin.file}",
+        :service     => plugin.service + " #{plugin.file}",
         :description => content.last(plugin.report_lines).join("\n"),
-        :metric => content.count
+        :metric      => content.count
     }
   end
 

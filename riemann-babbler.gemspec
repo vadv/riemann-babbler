@@ -1,29 +1,33 @@
-# -*- encoding: utf-8 -*-
-require File.expand_path('../lib/riemann/babbler/version', __FILE__)
+# coding: utf-8
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'riemann/babbler/version'
 
-Gem::Specification.new do |s|
-  s.name        = 'riemann-babbler'
-  s.version     = Riemann::Babbler::VERSION
-  s.authors     = ['Vasiliev D.V.']
-  s.email       = %w(vadv.mkn@gmail.com)
-  s.homepage    = 'https://github.com/vadv/riemann-babbler'
-  s.summary     = %q{Plugin manager for riemann.}
-  s.description = %q{Plugin manager for riemann.}
-  s.licenses    = %w(MIT)
-  
-  s.add_dependency('riemann-client')
-  s.add_dependency('configatron')
-  s.add_dependency('logger')
-  s.add_dependency('trollop')
-  s.add_dependency('sys-filesystem')
-  s.add_dependency('rest-client')
-  s.add_dependency('net-ping')
-  s.add_dependency('file-tail')
-  s.add_dependency('sys-proctable')
-  s.add_dependency('net-http-server')
+Gem::Specification.new do |spec|
+  spec.name        = 'riemann-babbler'
+  spec.version     = Riemann::Babbler::VERSION
+  spec.authors     = ['Vasiliev Dmitry']
+  spec.email       = ['vadv.mkn@gmail.com']
+  spec.description = %q{Monitoring tool for riemann}
+  spec.summary     = %q{Monitoring tool for riemann server, aka plugin manager}
+  spec.homepage    = 'https://github.com/vadv/riemann-babbler'
+  spec.license     = 'MIT'
 
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
-  s.require_paths = %w(lib)
+  spec.files         = `git ls-files`.split($/)
+  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
+  spec.require_paths = %w(lib)
+
+  spec.add_dependency 'riemann-client'
+  spec.add_dependency 'trollop'
+  spec.add_dependency 'rest-client'
+  spec.add_dependency 'sys-filesystem'
+  spec.add_dependency 'docile'
+  spec.add_dependency 'configatron'
+  spec.add_dependency 'net-http-server'
+
+
+  spec.add_development_dependency 'bundler', '~> 1.3'
+  spec.add_development_dependency 'rake'
+  spec.add_development_dependency 'pry'
 end

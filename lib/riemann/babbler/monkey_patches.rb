@@ -1,3 +1,28 @@
+module Beefcake
+  class Buffer
+
+    def initialize(buf='')
+      if buf.respond_to?(:force_encoding)
+        self.buf = buf.force_encoding('BINARY')
+      else
+        self.buf = buf
+      end
+    end
+
+    def append_string(s)
+      append_uint64(s.length)
+      if s.respond_to?(:force_encoding)
+        self << s.force_encoding('BINARY')
+      else
+        self << s
+      end
+    end
+
+    alias :append_bytes :append_string
+
+  end
+end
+
 # https://raw.github.com/Offirmo/hash-deep-merge/master/lib/hash_deep_merge.rb
 class Hash
 
@@ -13,35 +38,19 @@ class Hash
 
   protected
 
-  # better, recursive, preserving method
-  # OK OK this is not the most efficient algorithm,
-  # but at last it's *perfectly clear and understandable*
-  # so fork and improve if you need 5% more speed, ok ?
   def internal_deep_merge!(source_hash, specialized_hash)
-
-    #puts "starting deep merge..."
-
     specialized_hash.each_pair do |rkey, rval|
-      #puts "   potential replacing entry : " + rkey.inspect
-
       if source_hash.has_key?(rkey) then
-        #puts "   found potentially conflicting entry for #{rkey.inspect} : #{rval.inspect}, will merge :"
         if rval.is_a?(Hash) and source_hash[rkey].is_a?(Hash) then
-          #puts "      recursing..."
           internal_deep_merge!(source_hash[rkey], rval)
         elsif rval == source_hash[rkey] then
-          #puts "      same value, skipping."
         else
-          #puts "      replacing."
           source_hash[rkey] = rval
         end
       else
-        #puts "   found new entry #{rkey.inspect}, adding it..."
         source_hash[rkey] = rval
       end
     end
-
-    #puts "deep merge done."
 
     source_hash
   end

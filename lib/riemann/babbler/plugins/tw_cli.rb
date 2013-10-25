@@ -1,4 +1,4 @@
-class Riemann::Babbler::TwCli < Riemann::Babbler
+class Riemann::Babbler::Plugin::TwCli < Riemann::Babbler::Plugin
 
   def init
     plugin.set_default(:service, 'twcli')
@@ -12,10 +12,10 @@ class Riemann::Babbler::TwCli < Riemann::Babbler
   end
 
   def collect
-    { 
-      :service => plugin.service,
-      :metric => shell(plugin.cmd).to_i,
-      :description => 'Hardware raid tw_cli status'
+    {
+        :service     => plugin.service,
+        :metric      => shell(plugin.cmd).to_i,
+        :description => 'Hardware raid tw_cli status'
     }
   end
 

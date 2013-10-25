@@ -1,50 +1,46 @@
+PATH
+  remote: .
+  specs:
+    riemann-babbler (0.0.1)
+      configatron
+      docile
+      net-http-server
+      rest-client
+      riemann-client
+      sys-filesystem
+      trollop
+
 GEM
   remote: https://rubygems.org/
   specs:
-    awesome_print (1.1.0)
-    beefcake (0.3.7)
+    beefcake (0.4.0)
     blankslate (2.1.2.4)
     coderay (1.0.9)
-    configatron (2.10.0)
+    configatron (2.13.0)
       yamler (>= 0.1.0)
-    diff-lcs (1.2.2)
-    ffi (1.4.0)
-    file-tail (1.0.12)
-      tins (~> 0.5)
-    logger (1.2.8)
-    method_source (0.8.1)
-    mime-types (1.21)
+    docile (1.1.0)
+    ffi (1.9.0)
+    method_source (0.8.2)
+    mime-types (1.25)
     mtrc (0.0.4)
     net-http-server (0.2.2)
       parslet (~> 1.0)
-    net-ping (1.6.0)
-      ffi (>= 1.0.0)
     parslet (1.5.0)
       blankslate (~> 2.0)
-    pry (0.9.12)
+    pry (0.9.12.2)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.4)
-    rake (10.0.4)
+    rake (10.1.0)
     rest-client (1.6.7)
       mime-types (>= 1.16)
-    riemann-client (0.2.1)
+    riemann-client (0.2.2)
       beefcake (>= 0.3.5)
       mtrc (>= 0.0.4)
       trollop (>= 1.16.2)
-    rspec (2.13.0)
-      rspec-core (~> 2.13.0)
-      rspec-expectations (~> 2.13.0)
-      rspec-mocks (~> 2.13.0)
-    rspec-core (2.13.1)
-    rspec-expectations (2.13.0)
-      diff-lcs (>= 1.1.3, < 2.0)
-    rspec-mocks (2.13.0)
-    slop (3.4.3)
-    sys-filesystem (1.1.0)
+    slop (3.4.6)
+    sys-filesystem (1.1.1)
       ffi
-    sys-proctable (0.9.3)
-    tins (0.8.0)
     trollop (2.0)
     yamler (0.1.0)
 
@@ -52,17 +48,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  awesome_print
-  configatron
-  file-tail
-  logger
-  net-http-server
-  net-ping
+  bundler (~> 1.3)
   pry
   rake
-  rest-client
-  riemann-client
-  rspec
-  sys-filesystem
-  sys-proctable
-  trollop
+  riemann-babbler!

@@ -1,4 +1,4 @@
-class Riemann::Babbler::Exim4 < Riemann::Babbler
+class Riemann::Babbler::Plugin::Exim4 < Riemann::Babbler::Plugin
 
   def init
     plugin.set_default(:service, 'exim4')
@@ -13,7 +13,7 @@ class Riemann::Babbler::Exim4 < Riemann::Babbler
   end
 
   def collect
-    { :service => plugin.service, :metric => shell(plugin.cmd).to_i, :description => 'Exim4: count frozen mails'}
+    { :service => plugin.service, :metric => shell(plugin.cmd).to_i, :description => 'Exim4: count frozen mails' }
   end
 
 end

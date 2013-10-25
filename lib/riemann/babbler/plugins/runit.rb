@@ -1,10 +1,9 @@
-class Riemann::Babbler::Runit < Riemann::Babbler
+class Riemann::Babbler::Plugin::Runit < Riemann::Babbler::Plugin
 
   def init
     plugin.set_default(:service, 'runit')
-    plugin.set_default(:not_monit, ['riemann-client'])
+    plugin.set_default(:not_monit, %w(riemann-client))
     plugin.set_default(:interval, 60)
-
     @status_history = Array.new
   end
 
@@ -22,7 +21,7 @@ class Riemann::Babbler::Runit < Riemann::Babbler
   def runned?(service)
     stat_file = File.join(service, 'supervise', 'stat')
     return false unless File.exists?(stat_file)
-    File.read( stat_file ).strip == 'run'
+    File.read(stat_file).strip == 'run'
   end
 
   def human_srv(service)
@@ -40,12 +39,12 @@ class Riemann::Babbler::Runit < Riemann::Babbler
       next if not_monit?(srv)
       srv_uptime = uptime(srv)
       srv_runned = runned?(srv)
-      srv_name = human_srv(srv)
+      srv_name   = human_srv(srv)
 
       # сервис запущен и работает дольше чем мы приходили к нему в прошлый раз
       if srv_runned && srv_uptime > plugin.interval
         @status_history.delete(srv_name)
-        status << {:service => plugin.service + ' ' + srv_name , :state => 'ok', :description => "runit service #{srv_name} running", :metric => srv_uptime}
+        status << { :service => plugin.service + ' ' + srv_name, :state => 'ok', :description => "runit service #{srv_name} running", :metric => srv_uptime }
       else
         # сервис запущен но работает подозрительно мало, но последний раз замечен не был
         if srv_uptime < plugin.interval && srv_runned && !@status_history.include?(srv_name)
@@ -53,7 +52,7 @@ class Riemann::Babbler::Runit < Riemann::Babbler
           @status_history << srv_name
         else
           # во всех остальных случаях сообщаем о проблеме
-          status << {:service => plugin.service + ' ' + srv_name , :state => 'critical', :description => "runit service #{srv_name} not running", :metric => srv_uptime}
+          status << { :service => plugin.service + ' ' + srv_name, :state => 'critical', :description => "runit service #{srv_name} not running", :metric => srv_uptime }
         end
       end
 

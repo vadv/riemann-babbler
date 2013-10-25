@@ -1,4 +1,4 @@
-class Riemann::Babbler::CpuTemp < Riemann::Babbler
+class Riemann::Babbler::Plugin::CpuTemp < Riemann::Babbler::Plugin
 
   def init
     plugin.set_default(:service, 'cputemp')
@@ -13,7 +13,7 @@ class Riemann::Babbler::CpuTemp < Riemann::Babbler
   end
 
   def collect
-    { :service => plugin.service, :metric => shell(plugin.cmd).to_i, :description => 'CPU Temperature'}
+    { :service => plugin.service, :metric => shell(plugin.cmd).to_i, :description => 'CPU Temperature' }
   end
 
 end

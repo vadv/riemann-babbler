@@ -1,4 +1,4 @@
-class Riemann::Babbler::MegaCli < Riemann::Babbler
+class Riemann::Babbler::Plugin::MegaCli < Riemann::Babbler::Plugin
 
   def init
     plugin.set_default(:service, 'megacli')
@@ -12,7 +12,7 @@ class Riemann::Babbler::MegaCli < Riemann::Babbler
   end
 
   def collect
-    {:service => plugin.service, :metric => shell(plugin.cmd).to_i, :description => 'MegaCli status'}
+    { :service => plugin.service, :metric => shell(plugin.cmd).to_i, :description => 'MegaCli status' }
   end
 
 end
