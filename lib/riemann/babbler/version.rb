@@ -1,5 +1,5 @@
 module Riemann
   module Babbler
-    VERSION = '0.0.1'
+    VERSION = '2.0.0pre1'
   end
 end
