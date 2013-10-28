@@ -24,6 +24,12 @@ module Riemann
         opts.configure_from_hash(result_config)
       end
 
+      # return configatron from hash
+      def opts_reset!(hash)
+        opts.reset!
+        opts.configure_from_hash(hash)
+      end
+
       # return string tw_cli_3
       def name_to_underscore(name = 'Riemann::Babbler::Plugin::TwCli_3')
         name.split('::').last.gsub(/(\p{Lower})(\p{Upper})/, "\\1_\\2").downcase
