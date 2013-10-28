@@ -52,10 +52,11 @@ module Riemann
         opts.plugins.to_hash.each do |plugin_name, plugin_opts|
           next if plugin_opts.nil?
           next unless plugin_opts.kind_of?(Hash)
-          if plugin_opts.has_key? "parent"
-            klass = Class.new(underscore_to_name(plugin_name))
-            klass.send(:title, underscore_to_name(plugin_opts[:parent]).to_sym)
-            Riemann::Babbler::Plugin.registered_plugins << klass
+          if plugin_opts.has_key? :parent
+            cmd = "class #{underscore_to_name plugin_name} < #{underscore_to_name plugin_opts[:parent]}; end;"
+            cmd += "Riemann::Babbler::Plugin.registered_plugins << #{underscore_to_name plugin_name}"
+            puts "CMD: #{cmd}"
+            eval(cmd)
           end
         end
       end

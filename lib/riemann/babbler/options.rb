@@ -24,12 +24,20 @@ module Riemann
         opts.configure_from_hash(result_config)
       end
 
-      def name_to_underscore(name = 'Riemann::Babbler::Plugin::TwCli')
+      # return string tw_cli_3
+      def name_to_underscore(name = 'Riemann::Babbler::Plugin::TwCli_3')
         name.split('::').last.gsub(/(\p{Lower})(\p{Upper})/, "\\1_\\2").downcase
       end
 
-      def underscore_to_name(underscore = 'tw_cli')
-        underscore.split('_').map { |part| part.capitalize }.join('')
+      # return string Riemann::Babbler::Plugin::TwCli_3
+      def underscore_to_name(name = 'tw_cli_3', parent = 'Riemann::Babbler::Plugin')
+        parent + '::'  + name.to_s.split('_').map { |part|
+          if part.to_i != 0
+            "_#{part}"
+          else
+            part.capitalize
+          end
+        }.join('')
       end
 
       def self.included(base)
