@@ -10,13 +10,11 @@ module Riemann
       include Riemann::Babbler::Logging
       include Riemann::Babbler::Options
 
-      attr_accessor :port, :errors, :config, :started_at
+      attr_accessor :port, :started_at
 
       def initialize
         @port       = opts.riemann.responder_port
         @started_at = Time.now.to_i
-        @errors     = opts.errors
-        @config     = opts.riemann
       end
 
       def info
@@ -24,8 +22,8 @@ module Riemann
             :version => Riemann::Babbler::VERSION,
             :ruby    => "#{RUBY_VERSION}-#{RUBY_PATCHLEVEL}",
             :uptime  => Time.now.to_i - started_at,
-            :errors  => errors.to_hash,
-            :config  => config.to_hash
+            :errors  => opts.errors.to_hash,
+            :config  => opts.riemann.to_hash
         }
       end
 

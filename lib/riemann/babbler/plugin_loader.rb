@@ -95,15 +95,15 @@ module Riemann
 
         started_plugins = []
 
-        plugin_names_to_run = (AUTO_START +
-            opts.plugins.to_hash.keys.map { |name| name.to_s }).uniq
+        plugin_names_to_run = AUTO_START +
+            opts.plugins.to_hash.keys.map { |name| name.to_s }
 
         require_all_plugins!
 
-        plugin_names_to_run = (plugin_names_to_run +
-          load_plugin_names_from_config.map {|name| name.to_s}).uniq
+        plugin_names_to_run = plugin_names_to_run +
+          load_plugin_names_from_config.map {|name| name.to_s}
 
-        plugin_names_to_run = plugin_names_to_run - delete_from_autostart
+        plugin_names_to_run = (plugin_names_to_run - delete_from_autostart).uniq
 
         Riemann::Babbler::Plugin.registered_plugins.each do |klass|
           if plugin_names_to_run.include? name_to_underscore(klass.to_s)
