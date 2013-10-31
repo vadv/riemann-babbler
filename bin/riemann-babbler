@@ -32,6 +32,7 @@ where [options] are:
   #todo: opt :log_format, 'Log format', :default => '%Y-%m-%d %H:%M:%S'
   opt :plugins_directory, 'Directory for plugins', :default => '/usr/share/riemann-babbler/plugins'
   opt :tcp, 'Use TCP transport instead of UDP (improves reliability, slight overhead.', :default => true
+  opt :minimize_event_count, 'Minimize count of sent messages', :default => true
   opt :responder_port, 'Port to bind responder', :default => 55755
 end
 
