@@ -4,8 +4,6 @@
 require 'trollop'
 require 'yaml'
 require_relative '../lib/riemann/babbler'
-require_relative '../lib/riemann/babbler/plugin'
-require_relative '../lib/riemann/babbler/plugin_manager'
 
 include Riemann::Babbler::Logging
 include Riemann::Babbler::Options

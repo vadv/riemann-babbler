@@ -1,3 +1,5 @@
+require_relative 'plugin'
+
 module Riemann
   module Babbler
     class PluginLoader

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    riemann-babbler (2.0.0pre11)
+    riemann-babbler (2.0.0pre12)
       configatron
       docile
       file-tail
@@ -21,8 +21,9 @@ GEM
     coderay (1.0.9)
     configatron (2.13.0)
       yamler (>= 0.1.0)
+    diff-lcs (1.2.4)
     docile (1.1.0)
-    ffi (1.9.0)
+    ffi (1.9.3)
     file-tail (1.0.12)
       tins (~> 0.5)
     method_source (0.8.2)
@@ -45,6 +46,14 @@ GEM
       beefcake (>= 0.3.5)
       mtrc (>= 0.0.4)
       trollop (>= 1.16.2)
+    rspec (2.14.1)
+      rspec-core (~> 2.14.0)
+      rspec-expectations (~> 2.14.0)
+      rspec-mocks (~> 2.14.0)
+    rspec-core (2.14.7)
+    rspec-expectations (2.14.3)
+      diff-lcs (>= 1.1.3, < 2.0)
+    rspec-mocks (2.14.4)
     slop (3.4.6)
     sys-filesystem (1.1.1)
       ffi
@@ -61,3 +70,4 @@ DEPENDENCIES
   pry
   rake
   riemann-babbler!
+  rspec

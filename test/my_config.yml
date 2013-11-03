@@ -1,0 +1,10 @@
+riemann:
+  host: host_from_yaml
+  plugins_directory: /tmp
+
+plugins:
+  disk_1:
+    parent: disk
+  cpu:
+    - service: cpu 1
+    - service: cpu 2

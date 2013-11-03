@@ -33,7 +33,7 @@ module Riemann
 
         loop {
           check_alive(hash_of_plugins_and_threads)
-          sleep 1
+          sleep 10
         }
       end
 
