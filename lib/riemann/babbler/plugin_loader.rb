@@ -19,15 +19,15 @@ module Riemann
           'net',
           'runit',
           'tw_cli',
-          'errors_reporter'
+          'errors_reporter',
+          'responder'
       ].freeze
 
-      attr_accessor :sender, :load_plugin_names_from_config, :delete_from_autostart
+      attr_accessor :load_plugin_names_from_config, :delete_from_autostart
 
-      def initialize(riemann)
-        @sender = riemann
+      def initialize
         @load_plugin_names_from_config = Array.new
-        @delete_from_autostart = Array.new
+        @delete_from_autostart         = Array.new
       end
 
       def all_available_plugins
@@ -91,7 +91,7 @@ module Riemann
         require_from_config
       end
 
-      def run!
+      def plugin_to_start
 
         started_plugins = []
 
@@ -101,7 +101,7 @@ module Riemann
         require_all_plugins!
 
         plugin_names_to_run = plugin_names_to_run +
-          load_plugin_names_from_config.map {|name| name.to_s}
+            load_plugin_names_from_config.map { |name| name.to_s }
 
         plugin_names_to_run = (plugin_names_to_run - delete_from_autostart).uniq
 
@@ -111,16 +111,8 @@ module Riemann
           end
         end
 
-        plugin_threads = started_plugins.map do |plugin|
-          Thread.new {
-            log :unknown, "Start plugin #{plugin}"
-            plugin.new(sender).run!
-          }
-        end
-        Signal.trap 'TERM' do
-          plugin_threads.each(&:kill)
-        end
-        plugin_threads.each(&:join)
+        log :debug, "Return plugin to start: #{started_plugins}"
+        started_plugins
       end
 
     end

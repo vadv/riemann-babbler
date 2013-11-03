@@ -44,7 +44,7 @@ class Riemann::Babbler::Plugin::Runit < Riemann::Babbler::Plugin
       # сервис запущен и работает дольше чем мы приходили к нему в прошлый раз
       if srv_runned && srv_uptime > plugin.interval
         @status_history.delete(srv_name)
-        status << { :service => plugin.service + ' ' + srv_name, :state => 'ok', :description => "runit service #{srv_name} running", :metric => srv_uptime }
+        status << { :service => plugin.service + ' ' + srv_name, :state => 'ok', :description => "runit service #{srv_name} running" }
       else
         # сервис запущен но работает подозрительно мало, но последний раз замечен не был
         if srv_uptime < plugin.interval && srv_runned && !@status_history.include?(srv_name)

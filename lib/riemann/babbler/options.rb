@@ -37,7 +37,7 @@ module Riemann
 
       # return string Riemann::Babbler::Plugin::TwCli_3
       def underscore_to_name(name = 'tw_cli_3', parent = 'Riemann::Babbler::Plugin')
-        parent + '::'  + name.to_s.split('_').map { |part|
+        parent + '::' + name.to_s.split('_').map { |part|
           if part.to_i != 0
             "_#{part}"
           else

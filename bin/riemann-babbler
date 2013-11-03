@@ -5,6 +5,7 @@ require 'trollop'
 require 'yaml'
 require_relative '../lib/riemann/babbler'
 require_relative '../lib/riemann/babbler/plugin'
+require_relative '../lib/riemann/babbler/plugin_manager'
 
 include Riemann::Babbler::Logging
 include Riemann::Babbler::Options
@@ -42,5 +43,6 @@ opts.configure_from_hash({ :riemann => cmd_opts })
 merge_config(opts.riemann.config)
 
 # start
-Riemann::Babbler::Responder.new.run!
-Riemann::Babbler::PluginLoader.new(Riemann::Babbler::Sender.new).run!
+sender = Riemann::Babbler::Sender.new
+plugins_to_start = Riemann::Babbler::PluginLoader.new.plugin_to_start
+Riemann::Babbler::PluginManager.new(sender, plugins_to_start).run!

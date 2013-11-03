@@ -6,7 +6,7 @@ class Riemann::Babbler::Plugin::ErrorsReporter < Riemann::Babbler::Plugin
   end
 
   def collect
-    status = Array.new
+    status   = Array.new
     messages = Array.new
 
     opts.errors.to_hash.each do |plugin_name, plugin_status|
@@ -22,9 +22,9 @@ class Riemann::Babbler::Plugin::ErrorsReporter < Riemann::Babbler::Plugin
     else
       @report_ok = false
       status << {
-          :service => plugin.service,
-          :state => 'critical',
-          :metric => messages.count,
+          :service     => plugin.service,
+          :state       => 'critical',
+          :metric      => messages.count,
           :description => "Problem with plugins:\n #{messages.join("\n")}"
       }
     end
