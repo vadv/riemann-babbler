@@ -14,26 +14,29 @@ module Riemann
       def run!
         hash_of_plugins_and_threads = Hash.new
         @plugins.map do |plugin|
-
           unless plugin.new(@sender).send(:run_plugin)
             log :unknown, "Disable plugin: #{plugin}, because it not started by condition: run_plugin"
             next
           end
-
-          hash_of_plugins_and_threads[plugin] = Thread.new {
-            log :unknown, "Start plugin #{plugin}"
-            plugin.new(@sender).run!
-          }
-
+          hash_of_plugins_and_threads[plugin] = run_thread(plugin)
         end
 
-        Signal.trap 'TERM' do
-          hash_of_plugins_and_threads.values.each(&:kill)
-        end
+        Signal.trap('TERM') { hash_of_plugins_and_threads.values.each(&:kill) }
 
-        loop {
+        loop do
           check_alive(hash_of_plugins_and_threads)
           sleep 10
+        end
+      end
+
+      def run_thread(plugin)
+        Thread.new {
+          log :unknown, "Start plugin #{plugin}"
+          Signal.trap('TERM') do
+            log :unknown, "Terminate plugin: #{plugin}"
+            Thread.current.terminate #todo clear terminate
+          end
+          plugin.new(@sender).run!
         }
       end
 
@@ -42,9 +45,7 @@ module Riemann
         hash_of_plugins_and_threads.each do |plugin, thread|
           next if thread.alive?
           log :error, "Plugin: #{plugin} is #{thread.inspect}, run it..."
-          hash_of_plugins_and_threads[plugin] = Thread.new {
-            plugin.new(@sender).run!
-          }
+          hash_of_plugins_and_threads[plugin] = run_thread(plugin)
         end
       end
 
