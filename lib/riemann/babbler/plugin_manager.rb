@@ -3,28 +3,26 @@ module Riemann
     class PluginManager
 
       include Riemann::Babbler::Logging
-
-      attr_accessor :sender
+      include Riemann::Babbler::Errors
 
       def initialize(sender, array_of_klasses)
         @plugins = array_of_klasses
         @sender  = sender
+        @mapping = Hash.new
       end
 
       def run!
-        hash_of_plugins_and_threads = Hash.new
+
         @plugins.map do |plugin|
           unless plugin.new(@sender).send(:run_plugin)
             log :unknown, "Disable plugin: #{plugin}, because it not started by condition: run_plugin"
             next
           end
-          hash_of_plugins_and_threads[plugin] = run_thread(plugin)
+          @mapping[plugin] = run_thread(plugin)
         end
 
-        Signal.trap('TERM') { hash_of_plugins_and_threads.values.each(&:kill) }
-
         loop do
-          check_alive(hash_of_plugins_and_threads)
+          check_alive
           sleep 10
         end
       end
@@ -32,21 +30,24 @@ module Riemann
       def run_thread(plugin)
         Thread.new {
           log :unknown, "Start plugin #{plugin}"
-          Signal.trap('TERM') do
-            log :unknown, "Terminate plugin: #{plugin}"
-            Thread.current.terminate #todo clear terminate
-          end
           plugin.new(@sender).run!
+          Signal.trap('TERM') do
+            shutdown
+          end
         }
       end
 
-      def check_alive(hash_of_plugins_and_threads)
-        log :debug, "Check alive of threads [#{hash_of_plugins_and_threads.count}]"
-        hash_of_plugins_and_threads.each do |plugin, thread|
+      def check_alive
+        log :debug, "Check alive of threads [#{@mapping.count}]"
+        @mapping.each do |plugin, thread|
           next if thread.alive?
           log :error, "Plugin: #{plugin} is #{thread.inspect}, run it..."
-          hash_of_plugins_and_threads[plugin] = run_thread(plugin)
+          @mapping[plugin] = run_thread(plugin)
         end
+      end
+
+      def shutdown
+        exit Errors::USER_CALL_SHUTDOWN
       end
 
     end
