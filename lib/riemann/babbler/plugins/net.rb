@@ -36,7 +36,7 @@ class Riemann::Babbler::Plugin::Net < Riemann::Babbler::Plugin
           $2.split(/\s+/).map { |str| str.to_i }
       ).each do |service, value|
         next unless plugin.filter.include? service
-        status << { :service => "#{plugin.service} #{iface} #{service}", :metric => value, :as_diff => true }
+        status << { :service => "#{plugin.service} #{iface} #{service}", :metric => value.to_f/plugin.interval, :as_diff => true }
       end
     end
     status

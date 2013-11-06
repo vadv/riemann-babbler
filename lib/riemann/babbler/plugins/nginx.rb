@@ -18,7 +18,7 @@ class Riemann::Babbler::Plugin::Nginx < Riemann::Babbler::Plugin
     status = Array.new
     lines  = rest_get(plugin.status_url).split("\n")
     lines[2].scan(/\d+/).each_with_index do |value, index|
-      status << { :service => plugin.service + " #{NGINX_STATUS_1[index]}", :metric => value.to_i, :as_diff => true }
+      status << { :service => plugin.service + " #{NGINX_STATUS_1[index]}", :metric => value.to_f/plugin.interval, :as_diff => true }
     end
     # line[0]: Active connections: XXXX
     status << { :service => plugin.service + ' active', :metric => lines[0].split(':')[1].strip.to_i }

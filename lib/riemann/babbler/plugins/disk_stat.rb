@@ -36,11 +36,11 @@ class Riemann::Babbler::Plugin::DiskStat < Riemann::Babbler::Plugin
         next if !!(dev.match /\d+$/ || !(dev.match =~ /^xvd/))
         # читаем все фильтры
         plugin.filter.each do |filter|
-          status << { :service => "#{plugin.service} #{dev} #{filter}", :metric => values[WORDS.index(filter)], :as_diff => true }
+          status << { :service => "#{plugin.service} #{dev} #{filter}", :metric => values[WORDS.index(filter)].to_f/plugin.interval, :as_diff => true }
         end
         # добавляем iops
         iops = values[WORDS.index('reads reqs')].to_i + values[WORDS.index('writes reqs')].to_i
-        status << { :service => "#{plugin.service} #{dev} iops", :metric => iops, :as_diff => true }
+        status << { :service => "#{plugin.service} #{dev} iops", :metric => iops.to_f/plugin.interval, :as_diff => true }
       end
     end
     status
