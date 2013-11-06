@@ -83,7 +83,7 @@ module Riemann
       def report_with_diff(event)
         current_metric = event[:metric]
         old_metric     = @storage['last_metric'][event[:service]]
-        if old_metric && (current_metric + old_metric < 2**64/plugin.inteval)
+        if old_metric && (current_metric + old_metric < (2**64.to_f/plugin.inteval))
           event[:metric] = current_metric - old_metric
           event.delete(:as_diff)
           report(event)
