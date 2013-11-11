@@ -10,12 +10,18 @@ class Riemann::Babbler::Plugin::Iptables < Riemann::Babbler::Plugin
     File.exists? plugin.rules_file
   end
 
+  def delete_counters(str)
+    str.gsub(/\[\d+\:\d+\]/, '').strip
+  end
+
   def collect
 
-    current_rules = shell('iptables-save | grep -v "^#"').split("\n").map {|x| x.strip}.compact.join("\n")
+    current_rules = shell('iptables-save | grep -v "^#"').split("\n").map do |x|
+      delete_counters(x)
+    end.compact.join("\n")
 
     saved_rules = File.read(plugin.rules_file).split("\n").map do |x|
-      x[0] == "#" ? nil : x.gsub(/\[\d+\:\d+\]/, '').strip # delete counters and comments
+      x[0] == "#" ? nil : delete_counters(x) # delete counters and comments
     end.compact.join("\n")
 
     status =  current_rules == saved_rules ? 'ok' : 'critical'
