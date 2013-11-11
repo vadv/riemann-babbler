@@ -21,6 +21,7 @@ module Riemann
           'net',
           'runit',
           'tw_cli',
+          'iptables',
           'errors_reporter',
           'responder'
       ].freeze
