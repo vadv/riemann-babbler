@@ -13,19 +13,21 @@ Riemann-babbler is tool for monitoring with riemann.
 Usage:
        riemann-babbler [options]
 where [options] are:
-             --config, -c <s>:   Config file (default: /etc/riemann-babbler/config.yml)
-               --host, -h <s>:   Riemann host (default: 127.0.0.1)
-               --port, -p <i>:   Riemann port (default: 5555)
-            --timeout, -t <i>:   Riemann timeout (default: 5)
-        --fqdn, --no-fqdn, -f:   Use fqdn for event hostname (default: true)
-                --ttl, -l <i>:   TTL for events (default: 60)
-           --interval, -i <i>:   Seconds between updates (default: 60)
-          --log-level, -o <s>:   Level log (default: DEBUG)
-  --plugins-directory, -u <s>:   Directory for plugins (default: /usr/share/riemann-babbler/plugins)
-              --tcp, --no-tcp:   Use TCP transport instead of UDP (improves reliability, slight overhead. (Default: true)
-     --responder-port, -r <i>:   Port to bind responder (default: 55755)
-                --version, -v:   Print version and exit
-                   --help, -e:   Show this message
+                                       --config, -c <s>:   Config file (default: /etc/riemann-babbler/config.yml)
+                                         --host, -h <s>:   Riemann host (default: 127.0.0.1)
+                                         --port, -p <i>:   Riemann port (default: 5555)
+                                      --timeout, -t <i>:   Riemann timeout (default: 5)
+                                  --fqdn, --no-fqdn, -f:   Use fqdn for event hostname (default: true)
+                                          --ttl, -l <i>:   TTL for events (default: 60)
+                                     --interval, -i <i>:   Seconds between updates (default: 60)
+                                    --log-level, -o <s>:   Level log (default: DEBUG)
+                            --plugins-directory, -u <s>:   Directory for plugins (default: /usr/share/riemann-babbler/plugins)
+                                        --tcp, --no-tcp:   Use TCP transport instead of UDP (improves reliability, slight overhead. (Default: true)
+  --minimize-event-count, --no-minimize-event-count, -m:   Minimize count of sent messages (default: true)
+                          --responder-http-port, -r <i>:   Port to bind http responder (default: 55755)
+                           --responder-udp-port, -e <i>:   Port to bind tcp responder (default: 55955)
+                                          --version, -v:   Print version and exit
+                                                 --help:   Show this message
 ```
 
 ### Config
