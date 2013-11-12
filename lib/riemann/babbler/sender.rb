@@ -58,7 +58,6 @@ module Riemann
       end
 
       def <<(event)
-        symbolize_event(event)
         set_event_hostname(event)
         set_event_tags(event)
         log :debug, "Post event: #{event}"
@@ -84,10 +83,6 @@ module Riemann
 
       def set_event_hostname(event)
         event[:host] = @hostname unless event[:host]
-      end
-
-      def symbolize_event(event)
-        event = event.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
       end
 
       def hostname

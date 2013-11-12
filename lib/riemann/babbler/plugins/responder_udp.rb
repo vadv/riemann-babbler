@@ -1,5 +1,4 @@
 require 'socket'
-require 'json'
 
 class Riemann::Babbler::Plugin::ResponderUdp < Riemann::Babbler::Plugin
 
@@ -9,7 +8,7 @@ class Riemann::Babbler::Plugin::ResponderUdp < Riemann::Babbler::Plugin
 
   def process(data, src)
     begin
-      report(JSON.parse(data)) # symbolize event in sender
+      report event_from_json(data)
       src.reply "sended\n"
     rescue
       log :error, "Failed to send message: #{data.inspect}"
