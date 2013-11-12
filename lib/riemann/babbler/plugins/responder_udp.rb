@@ -9,9 +9,10 @@ class Riemann::Babbler::Plugin::ResponderUdp < Riemann::Babbler::Plugin
 
   def process(data, src)
     begin
-      report(JSON.parse(data))
-      puts "src:#{src.inspect}" 
-      src.reply "ok\n"
+      msg = JSON.parse(data)
+      msg.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
+      report(msg)
+      src.reply "sended\n"
     rescue
       log :error, "Failed to send message: #{data.inspect}"
       src.reply "failed to send: #{data.inspect}\n"
