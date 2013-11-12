@@ -3,8 +3,9 @@ require 'socket'
 class Riemann::Babbler::Plugin::ResponderUdp < Riemann::Babbler::Plugin
 
   def init
-    plugin.set_default(:port, opts.riemann.responder_udp_port)
-    plugin.set_default(:host, '127.0.0.1')
+    host, port = opts.riemann.responder_bind_udp.split(':')
+    plugin.set_default(:port, port)
+    plugin.set_default(:host, host)
   end
 
   def process(data, src)

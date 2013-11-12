@@ -24,8 +24,8 @@ where [options] are:
                             --plugins-directory, -u <s>:   Directory for plugins (default: /usr/share/riemann-babbler/plugins)
                                         --tcp, --no-tcp:   Use TCP transport instead of UDP (improves reliability, slight overhead. (Default: true)
   --minimize-event-count, --no-minimize-event-count, -m:   Minimize count of sent messages (default: true)
-                          --responder-http-port, -r <i>:   Port to bind http responder (default: 55755)
-                           --responder-udp-port, -e <i>:   Port to bind tcp responder (default: 55955)
+                          --responder-bind-http, -r <s>:   Bind to http responder (default: 0.0.0.0:55755)
+                           --responder-bind-udp, -e <s>:   Bind to udp responder (default: 127.0.0.1:55955)
                                           --version, -v:   Print version and exit
                                                  --help:   Show this message
 ```

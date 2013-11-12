@@ -4,7 +4,9 @@ require 'json'
 class Riemann::Babbler::Plugin::ResponderHttp < Riemann::Babbler::Plugin
 
   def init
-    plugin.set_default(:port, opts.riemann.responder_http_port)
+    host, port = opts.riemann.responder_bind_http.split(':')
+    plugin.set_default(:port, port)
+    plugin.set_default(:host, host)
     plugin.set_default(:started_at, Time.now.to_i)
   end
 
@@ -23,8 +25,8 @@ class Riemann::Babbler::Plugin::ResponderHttp < Riemann::Babbler::Plugin
   end
 
   def run!
-    log :unknown, "Start responder 0.0.0.0:#{plugin.port}"
-    ::Net::HTTP::Server.run(:port => plugin.port) do |request, _|
+    log :unknown, "Start responder #{plugin.host}:#{plugin.port}"
+    ::Net::HTTP::Server.run(:port => plugin.port, :host => plugin.host) do |request, _|
       log :debug, "Responder request: #{request}"
       case
         when request[:uri][:path] == "/kill" #&& request[:method] == "POST"

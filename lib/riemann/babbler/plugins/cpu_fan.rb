@@ -13,7 +13,12 @@ class Riemann::Babbler::Plugin::CpuFan < Riemann::Babbler::Plugin
   end
 
   def collect
-    { :service => plugin.service, :metric => shell(plugin.cmd).to_i, :description => 'CPU Fan Speed' }
+    metric = shell(plugin.cmd).to_i
+    if metric == 0
+      { :service => plugin.service, :state => 'ok', :description => 'CPU Fan Speed' }
+    else
+      { :service => plugin.service, :metric => metric, :description => 'CPU Fan Speed' }
+    end
   end
 
 end

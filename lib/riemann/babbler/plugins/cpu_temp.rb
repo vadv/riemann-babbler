@@ -13,7 +13,12 @@ class Riemann::Babbler::Plugin::CpuTemp < Riemann::Babbler::Plugin
   end
 
   def collect
-    { :service => plugin.service, :metric => shell(plugin.cmd).to_i, :description => 'CPU Temperature' }
+    metric = shell(plugin.cmd).to_i
+    if metric == 0
+      { :service => plugin.service, :state => 'ok', :description => 'CPU Temperature' }
+    else
+      { :service => plugin.service, :metric => metric, :description => 'CPU Temperature' }
+    end
   end
 
 end
