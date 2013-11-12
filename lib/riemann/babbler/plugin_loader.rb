@@ -24,7 +24,8 @@ module Riemann
           'tw_cli',
           'iptables',
           'errors_reporter',
-          'responder'
+          'responder_http',
+          'responder_udp',
       ].freeze
 
       attr_accessor :load_plugin_names_from_config, :delete_from_autostart

@@ -32,7 +32,8 @@ where [options] are:
   opt :plugins_directory, 'Directory for plugins', :default => '/usr/share/riemann-babbler/plugins'
   opt :tcp, 'Use TCP transport instead of UDP (improves reliability, slight overhead.', :default => true
   opt :minimize_event_count, 'Minimize count of sent messages', :default => true
-  opt :responder_port, 'Port to bind responder', :default => 55755
+  opt :responder_http_port, 'Port to bind http responder', :default => 55755
+  opt :responder_udp_port, 'Port to bind tcp responder', :default => 55955
 end
 
 # load current settings

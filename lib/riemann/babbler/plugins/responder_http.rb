@@ -1,10 +1,10 @@
 require 'net/http/server'
 require 'json'
 
-class Riemann::Babbler::Plugin::Responder < Riemann::Babbler::Plugin
+class Riemann::Babbler::Plugin::ResponderHttp < Riemann::Babbler::Plugin
 
   def init
-    plugin.set_default(:port, opts.riemann.responder_port)
+    plugin.set_default(:port, opts.riemann.responder_http_port)
     plugin.set_default(:started_at, Time.now.to_i)
   end
 
