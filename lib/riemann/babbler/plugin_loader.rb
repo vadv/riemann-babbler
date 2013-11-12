@@ -13,6 +13,7 @@ module Riemann
           'cpu_temp',
           'disk',
           'disk_stat',
+          'ntp',
           'exim4',
           'la',
           'mdadm',

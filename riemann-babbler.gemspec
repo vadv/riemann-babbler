@@ -27,6 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'net-http-server'
   spec.add_dependency 'sys-proctable'
   spec.add_dependency 'net-ping'
+  spec.add_dependency 'net-ntp'
   spec.add_dependency 'file-tail'
 
 
