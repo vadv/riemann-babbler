@@ -9,9 +9,7 @@ class Riemann::Babbler::Plugin::ResponderUdp < Riemann::Babbler::Plugin
 
   def process(data, src)
     begin
-      msg = JSON.parse(data)
-      msg.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
-      report(msg)
+      report(JSON.parse(data)) # symbolize event in sender
       src.reply "sended\n"
     rescue
       log :error, "Failed to send message: #{data.inspect}"
@@ -22,7 +20,7 @@ class Riemann::Babbler::Plugin::ResponderUdp < Riemann::Babbler::Plugin
   def run!
     log :unknown, "Start udp server at #{plugin.port}"
     Socket.udp_server_loop(plugin.port) do |data, src|
-      log :debug, "recived data: #{data.inspect}, from client: #{src.inspect}"
+      log :debug, "Recived data: #{data.inspect}, from client: #{src.inspect}"
       process(data, src) 
     end
   end
