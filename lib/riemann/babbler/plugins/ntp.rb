@@ -17,7 +17,7 @@ class Riemann::Babbler::Plugin::Ntp < Riemann::Babbler::Plugin
     {
       :service     => plugin.service + " #{plugin.host}",
       :description => "Ntp lag with host #{plugin.host}",
-      :metric      => (::Net::NTP.get(plugin.host, 'ntp', 5).time.to_i - unixnow).abs
+      :metric      => (::Net::NTP.get(plugin.host, 'ntp', 5).time.to_f - Time.now.to_f).abs
     }
   end
 
