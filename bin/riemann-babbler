@@ -33,7 +33,7 @@ where [options] are:
   opt :tcp, 'Use TCP transport instead of UDP (improves reliability, slight overhead.', :default => true
   opt :minimize_event_count, 'Minimize count of sent messages', :default => true
   opt :responder_bind_http, 'Bind to http responder', :default => '0.0.0.0:55755'
-  opt :responder_bind_udp, 'Bind to udp responder', :default => '127.0.0.1:55955'
+  opt :responder_bind_udp, 'Bind to udp responder', :default => '0.0.0.0:55955'
 end
 
 # load current settings
