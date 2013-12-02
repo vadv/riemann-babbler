@@ -14,18 +14,19 @@ Usage:
        riemann-babbler [options]
 where [options] are:
                                        --config, -c <s>:   Config file (default: /etc/riemann-babbler/config.yml)
-                                         --host, -h <s>:   Riemann host (default: 127.0.0.1)
-                                         --port, -p <i>:   Riemann port (default: 5555)
+                                         --host, -h <s>:   Riemann server (default: 127.0.0.1)
+                                         --port, -p <i>:   Riemann server default port (default: 5555)
+                                      --backlog, -b <i>:   Riemann server backlog for events (default: 100)
                                       --timeout, -t <i>:   Riemann timeout (default: 5)
                                   --fqdn, --no-fqdn, -f:   Use fqdn for event hostname (default: true)
                                           --ttl, -l <i>:   TTL for events (default: 60)
                                      --interval, -i <i>:   Seconds between updates (default: 60)
                                     --log-level, -o <s>:   Level log (default: DEBUG)
-                            --plugins-directory, -u <s>:   Directory for plugins (default: /usr/share/riemann-babbler/plugins)
+                            --plugins-directory, -d <s>:   Directory for plugins (default: /usr/share/riemann-babbler/plugins)
                                         --tcp, --no-tcp:   Use TCP transport instead of UDP (improves reliability, slight overhead. (Default: true)
   --minimize-event-count, --no-minimize-event-count, -m:   Minimize count of sent messages (default: true)
                           --responder-bind-http, -r <s>:   Bind to http responder (default: 0.0.0.0:55755)
-                           --responder-bind-udp, -e <s>:   Bind to udp responder (default: 127.0.0.1:55955)
+                           --responder-bind-udp, -e <s>:   Bind to udp responder (default: 0.0.0.0:55955)
                                           --version, -v:   Print version and exit
                                                  --help:   Show this message
 ```
