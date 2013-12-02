@@ -1,6 +1,4 @@
-require 'riemann/client'
-require 'resolv'
-require 'socket'
+require_relative 'sender_client'
 
 module Riemann
   module Babbler
@@ -11,68 +9,41 @@ module Riemann
       include Riemann::Babbler::Options
       include Riemann::Babbler::Errors
 
-      attr_accessor :sender
-
       HOSTNAME_FILE = '/proc/sys/kernel/hostname'
+      CHECK_CLIENT_ALIVE = 10
 
       def initialize
-        @sender   = build_riemann_client
         @hostname = hostname
-      end
-
-      alias :r :sender
-
-      def build_riemann_client
-        @sender = Riemann::Client.new(
-            :host    => resolv(opts.riemann.host), #todo: add ttl
-            :port    => opts.riemann.port,
-            :timeout => opts.riemann.timeout
-        )
-        @sender = @sender.tcp if opts.riemann.tcp
-        connect_client(@sender)
-        @sender
-      end
-
-      #@return ipaddress of riemann server
-      def resolv(host)
-        begin
-          ip = Resolv.new.getaddress(host)
-          log :debug, "Resolv host: #{host} => #{ip}"
-        rescue
-          log :fatal, "Can't resolv hostname: #{host}"
-          exit Errors::RESOLV_RIEMANN_SERVER
-        end
-        ip
-      end
-
-      #@return connect to riemann
-      def connect_client(riemann)
-        begin
-          connect = @sender.connect
-          log :debug, "Connected to #{riemann.host}:#{riemann.port}"
-        rescue
-          log :fatal, "Can't connect to riemann server: #{riemann.host}:#{riemann.port}"
-          exit Errors::INIT_CONNECT
-        end
-        connect
+        @riemanns = create_riemanns
+        start
       end
 
       def <<(event)
         set_event_hostname(event)
         set_event_tags(event)
-        log :debug, "Post event: #{event}"
-        send_with_rescue(event, opts.riemann.timeout)
+        @riemanns.each {|r| r << event }
       end
 
-      def send_with_rescue(event, timeout)
-        begin
-          Timeout::timeout(timeout) {
-            @sender << event
-          }
-        rescue
-          log :fatal, "Connection problem with #{@sender.host}:#{@sender.port}, exit."
-          exit Errors::CONNECTION_PROBLEM
-        end
+      private
+
+      def start
+        Thread.new do
+          loop do
+            @riemanns.each do |r|
+              next if r.alive?
+              log :error, "Riemann client #{r.host}:#{r.port} is died, up it"
+              r.start
+            end
+            log :debug, "Check alive of riemann client [#{@riemanns.count}]"
+            sleep CHECK_CLIENT_ALIVE
+          end
+        end  
+      end
+
+      def create_riemanns
+        riemanns = Array.new
+        opts.riemann.host.each { |host| riemanns << Riemann::Babbler::Sender::Client.new(host) }
+        riemanns
       end
 
       def set_event_tags(event)

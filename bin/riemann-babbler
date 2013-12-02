@@ -19,19 +19,17 @@ where [options] are:
   EOS
 
   opt :config, 'Config file', :default => '/etc/riemann-babbler/config.yml'
-  opt :host, 'Riemann host', :default => '127.0.0.1'
-  opt :port, 'Riemann port', :default => 5555
+  opt :host, 'Riemann server', :default => '127.0.0.1', :multi => true
+  opt :port, 'Riemann server default port', :default => 5555
+  opt :backlog, 'Riemann server backlog for events', :default => 100
   opt :timeout, 'Riemann timeout', :default => 5
-  #todo: opt :event_hostname, 'Event hostname', :type => String
   opt :fqdn, 'Use fqdn for event hostname', :default => true
   opt :ttl, 'TTL for events', :default => 60
   opt :interval, 'Seconds between updates', :default => 60
   opt :log_level, 'Level log', :default => 'DEBUG'
-  #todo: opt :log_output, 'Directions to puts your log', :default => STDOUT
-  #todo: opt :log_format, 'Log format', :default => '%Y-%m-%d %H:%M:%S'
-  opt :plugins_directory, 'Directory for plugins', :default => '/usr/share/riemann-babbler/plugins'
+  opt :plugins_directory, 'Directory for plugins', :short => '-d', :default => '/usr/share/riemann-babbler/plugins'
   opt :tcp, 'Use TCP transport instead of UDP (improves reliability, slight overhead.', :default => true
-  opt :minimize_event_count, 'Minimize count of sent messages', :default => true
+  opt :minimize_event_count, 'Minimize count of sent messages', :short => '-m', :default => true
   opt :responder_bind_http, 'Bind to http responder', :default => '0.0.0.0:55755'
   opt :responder_bind_udp, 'Bind to udp responder', :default => '0.0.0.0:55955'
 end

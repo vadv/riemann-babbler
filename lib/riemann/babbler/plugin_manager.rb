@@ -5,6 +5,8 @@ module Riemann
       include Riemann::Babbler::Logging
       include Riemann::Babbler::Errors
 
+      CHECK_ALIVE_PLUGINS = 10
+
       def initialize(sender, array_of_klasses)
         @plugins = array_of_klasses
         @sender  = sender
@@ -12,7 +14,6 @@ module Riemann
       end
 
       def run!
-
         @plugins.map do |plugin|
           unless plugin.new(@sender).send(:run_plugin)
             log :unknown, "Disable plugin: #{plugin}, because it not started by condition: run_plugin"
@@ -20,12 +21,13 @@ module Riemann
           end
           @mapping[plugin] = run_thread(plugin)
         end
-
         loop do
           check_alive
-          sleep 10
+          sleep CHECK_ALIVE_PLUGINS
         end
       end
+
+      private
 
       def run_thread(plugin)
         Thread.new {
