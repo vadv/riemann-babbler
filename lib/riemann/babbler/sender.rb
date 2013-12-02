@@ -42,6 +42,7 @@ module Riemann
 
       def create_riemanns
         riemanns = Array.new
+        opts.riemann.host = [opts.riemann.host] if opts.riemann.host.class == String
         opts.riemann.host.each { |host| riemanns << Riemann::Babbler::Sender::Client.new(host) }
         riemanns
       end
