@@ -39,7 +39,8 @@ module Riemann
         end
 
         def alive?
-          !@runner.nil? || @runner.alive?
+          return false if @runner.nil?
+          @runner.alive?
         end
 
         def <<(event)
