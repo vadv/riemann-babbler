@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    riemann-babbler (2.5.1)
+    riemann-babbler (2.5.2)
       configatron
       docile
       file-tail

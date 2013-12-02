@@ -19,11 +19,11 @@ module Riemann
           @host, @port   = host.split(':')
           @port ||= opts.riemann.port
           @events = Array.new
-          @riemann = client
           start
         end
 
         def start
+          build_client
           @running = true
           @runner = Thread.new do
             while @running
@@ -43,7 +43,7 @@ module Riemann
         end
 
         def <<(event)
-          @events.shift if @events.size < opts.riemann.backlog
+          @events.shift if @events.size > opts.riemann.backlog
           @events << event
         end
 
@@ -62,40 +62,19 @@ module Riemann
           end
         end
 
-        # riemann client connect
-        def client
-          sender = Riemann::Client.new(
-            :host    => resolv(@host), #todo: add ttl
-            :port    => @port,
-            :timeout => opts.riemann.timeout
-          )
-          sender = sender.tcp if opts.riemann.tcp
-          connect_client(sender)
+        # riemann client
+        def build_client
+          @riemann = nil 
+          @riemann = Riemann::Client.new(:host => resolv(@host), :port => @port, :timeout => opts.riemann.timeout)
+          @riemann = @riemann.tcp if opts.riemann.tcp
+          @riemann
         end
 
         #@return ipaddress of riemann server
         def resolv(host)
-          begin
-            ip = Resolv.new.getaddress(host)
-            log :debug, "Resolv host: #{host} => #{ip}"
-          rescue
-            log :fatal, "Can't resolv hostname: #{host}"
-            exit Errors::RESOLV_RIEMANN_SERVER
-          end
+          ip = Resolv.new.getaddress(host)
+          log :debug, "Resolv host: #{host} => #{ip}"
           ip
-        end
-
-        #@return connect to riemann
-        def connect_client(riemann)
-          connect = riemann
-          begin
-            connect = riemann.connect if opts.riemann.tcp
-            log :debug, "Connected to #{riemann.host}:#{riemann.port}"
-          rescue
-            log :fatal, "Can't connect to riemann server: #{riemann.host}:#{riemann.port}"
-            exit Errors::INIT_CONNECT
-          end
-          connect
         end
 
       end
