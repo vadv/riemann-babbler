@@ -39,7 +39,7 @@ module Riemann
         end
 
         def alive?
-          @runner.nil? || @runner.alive?
+          !@runner.nil? || @runner.alive?
         end
 
         def <<(event)
@@ -54,27 +54,24 @@ module Riemann
           return nil if @events.empty?
           while @events.size > 0
             event = @events[0]
-            log :debug, "Post event via #{@host}:#{@port} : #{event.inspect}"
             Timeout::timeout(opts.riemann.timeout) {
               @riemann << event
             }
             @events.shift
+            log :debug, "Posted event (#{@host}:#{@port}): #{event.inspect}"
           end
         end
 
         # riemann client
         def build_client
           @riemann = nil 
-          @riemann = Riemann::Client.new(:host => resolv(@host), :port => @port, :timeout => opts.riemann.timeout)
+          @riemann = Riemann::Client.new({
+            :host => Resolv.new.getaddress(@host), 
+            :port => @port, 
+            :timeout => opts.riemann.timeout
+          })
           @riemann = @riemann.tcp if opts.riemann.tcp
           @riemann
-        end
-
-        #@return ipaddress of riemann server
-        def resolv(host)
-          ip = Resolv.new.getaddress(host)
-          log :debug, "Resolv host: #{host} => #{ip}"
-          ip
         end
 
       end
