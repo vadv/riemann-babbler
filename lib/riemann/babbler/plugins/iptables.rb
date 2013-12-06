@@ -18,11 +18,11 @@ class Riemann::Babbler::Plugin::Iptables < Riemann::Babbler::Plugin
 
     current_rules = shell('iptables-save').split("\n").map do |x|
       x[0] == "#" ? nil : delete_counters(x) # delete counters and comments
-    end.compact.join("\n")
+    end.compact.sort.join("\n")
 
     saved_rules = File.read(plugin.rules_file).split("\n").map do |x|
       x[0] == "#" ? nil : delete_counters(x) # delete counters and comments
-    end.compact.join("\n")
+    end.compact.sort.join("\n")
 
     status =  current_rules == saved_rules ? 'ok' : 'critical'
     {
