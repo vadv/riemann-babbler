@@ -16,6 +16,7 @@ class Riemann::Babbler::Plugin::Disk < Riemann::Babbler::Plugin
     plugin.set_default(:service, 'disk')
     plugin.states.set_default(:warning, 70)
     plugin.states.set_default(:critical, 85)
+    plugin.states.set_default(:check_fstab, true)
   end
 
   def get_fstab
@@ -68,7 +69,7 @@ class Riemann::Babbler::Plugin::Disk < Riemann::Babbler::Plugin
     end
     get_monit_points_for_fstab.each do |point|
       disk << { :service => plugin.service + " #{point} fstab entry", :description => "Mount point #{point} not matched in /etc/fstab", :state => 'critical' } unless fstab.match(/#{point}(\s|\/\s)/)
-    end
+    end if plugin.check_fstab
     disk
   end
 
