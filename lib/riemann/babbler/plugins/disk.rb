@@ -67,7 +67,7 @@ class Riemann::Babbler::Plugin::Disk < Riemann::Babbler::Plugin
       disk << { :service => plugin.service + " #{human_point} abs total", :description => "Disk space #{point}, B", :metric => point_stat.blocks * point_stat.block_size, :state => 'ok' }
     end
     get_monit_points_for_fstab.each do |point|
-      disk << { :service => plugin.service + " #{point} fstab entry", :description => "Mount point #{point} not matched in /etc/fstab", :state => 'critical' } unless fstab.match(/#{point}\s/)
+      disk << { :service => plugin.service + " #{point} fstab entry", :description => "Mount point #{point} not matched in /etc/fstab", :state => 'critical' } unless fstab.match(/#{point}(\s|\/\s)/)
     end
     disk
   end
