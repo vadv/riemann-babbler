@@ -27,17 +27,22 @@ module Riemann
       private
 
       def start
-        Thread.new do
+        Thread.new {
           loop do
-            @riemanns.each do |r|
-              next if r.alive?
-              log :error, "Riemann client #{r.host}:#{r.port} is died, up it"
-              r.start
+            begin
+              @riemanns.each do |r|
+                next if r.alive?
+                log :error, "Riemann client #{r.host}:#{r.port} is died, up it"
+                r.start
+              end
+              log :debug, "Check alive of riemann client [#{@riemanns.count}]"
+              sleep CHECK_CLIENT_ALIVE
+            rescue
+              log :error, "Riemann client sender problem"
+              exit Errors::CONNECTION_PROBLEM
             end
-            log :debug, "Check alive of riemann client [#{@riemanns.count}]"
-            sleep CHECK_CLIENT_ALIVE
           end
-        end  
+        }
       end
 
       def create_riemanns

@@ -25,13 +25,13 @@ module Riemann
         def start
           build_client
           @running = true
-          @runner = Thread.new do
+          @runner = Thread.new {
             while @running
               sleep INTERVAL_FLUSH
               flush
             end
             @runner = nil
-          end
+          }
         end
 
         def stop
