@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    riemann-babbler (2.8.3)
+    riemann-babbler (2.8.4)
       beefcake
       configatron
       file-tail
