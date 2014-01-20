@@ -1,6 +1,7 @@
 #encoding: utf-8
 
-require 'rest_client'
+require 'uri'
+require 'net/http'
 
 module Riemann
   module Babbler
@@ -12,7 +13,9 @@ module Riemann
           begin
             Timeout::timeout(plugin.timeout) do
               begin
-                RestClient.get url
+                res = ::Net::HTTP.get_response(URI(url))
+                raise ::Net::HTTPError unless res.kind_of?(::Net::HTTPSuccess)
+                res.body
               rescue
                 raise "Get from url: #{url} failed"
               end

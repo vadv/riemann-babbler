@@ -152,7 +152,6 @@ module Riemann
       # Main method
       def run!
         return 0 unless run_plugin
-        sleep Random.new.rand(10)
         loop do
           t_start = Time.now
           begin

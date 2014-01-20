@@ -20,9 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'beefcake'
   spec.add_dependency 'trollop'
-  spec.add_dependency 'rest-client'
   spec.add_dependency 'sys-filesystem'
-  spec.add_dependency 'docile'
   spec.add_dependency 'configatron'
   spec.add_dependency 'net-http-server'
   spec.add_dependency 'sys-proctable'
