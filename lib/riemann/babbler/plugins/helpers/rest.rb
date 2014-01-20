@@ -1,7 +1,6 @@
 #encoding: utf-8
 
-require 'uri'
-require 'net/http'
+require 'open-uri'
 
 module Riemann
   module Babbler
@@ -13,9 +12,13 @@ module Riemann
           begin
             Timeout::timeout(plugin.timeout) do
               begin
-                res = ::Net::HTTP.get_response(URI(url))
-                raise ::Net::HTTPError unless res.kind_of?(::Net::HTTPSuccess)
-                res.body
+                uri = URI(url)
+                if uri.userinfo
+                  open("#{uri.scheme}://#{uri.hostname}:#{uri.port}#{uri.request_uri}", 
+                    :http_basic_authentication => [uri.user, uri.password]).read
+                else
+                  open(url).read
+                end
               rescue
                 raise "Get from url: #{url} failed"
               end
