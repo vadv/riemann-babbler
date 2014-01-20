@@ -1,4 +1,4 @@
-require 'riemann/client'
+require 'riemann/babbler/client'
 require 'resolv'
 require 'socket'
 
@@ -52,26 +52,18 @@ module Riemann
 
         # flush events
         def flush
-          return nil if @events.empty?
-          while @events.size > 0
-            event = @events[0]
-            Timeout::timeout(opts.riemann.timeout) {
-              @riemann << event
-            }
-            @events.shift
-            log :debug, "Posted event (#{@host}:#{@port}): #{event.inspect}"
-          end
+          @riemann << @events
+          log :debug, "Posted event (#{@host}:#{@port}): #{events.inspect}"
+          @events.clear
         end
 
         # riemann client
         def build_client
           @riemann = nil 
-          @riemann = Riemann::Client.new({
+          @riemann = Riemann::Babbler::Client.new({
             :host => Resolv.new.getaddress(@host), 
-            :port => @port, 
-            :timeout => opts.riemann.timeout
+            :port => @port
           })
-          @riemann = @riemann.tcp if opts.riemann.tcp
           @riemann
         end
 

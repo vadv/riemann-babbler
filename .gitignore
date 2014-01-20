@@ -4,3 +4,4 @@ pkg/
 *.swp
 .bundle
 vendor
+.vendor
