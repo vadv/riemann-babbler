@@ -152,11 +152,11 @@ module Riemann
       # Main method
       def run!
         return 0 unless run_plugin
-        t0 = Time.now
+        sleep Random.new.rand(10)
         loop do
-
+          t_start = Time.now
           begin
-            Timeout::timeout(plugin.interval) { tick }
+            Timeout::timeout(plugin.interval.to_f * 2/3 ) { tick }
           rescue TimeoutError
             plugin_error!('Timeout plugin execution')
           rescue => e
@@ -164,8 +164,7 @@ module Riemann
           else
             plugin_no_error!
           end
-
-          sleep(plugin.interval - ((Time.now - t0) % plugin.interval))
+          sleep(plugin.interval - (Time.now - t_start).to_i)
         end
 
       end

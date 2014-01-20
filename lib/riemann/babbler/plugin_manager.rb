@@ -43,7 +43,11 @@ module Riemann
         log :debug, "Check alive of threads [#{@mapping.count}]"
         @mapping.each do |plugin, thread|
           next if thread.alive?
-          log :error, "Plugin: #{plugin} is #{thread.inspect}, run it..."
+          begin
+            thread.join
+          rescue => e
+            log :error, "has error #{e.class}: #{e}\n #{e.backtrace.join("\n")}"
+          end
           @mapping[plugin] = run_thread(plugin)
         end
       end

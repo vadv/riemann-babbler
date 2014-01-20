@@ -11,7 +11,7 @@ module Riemann
         include Riemann::Babbler::Options
         include Riemann::Babbler::Errors
 
-        INTERVAL_FLUSH = 0.1
+        INTERVAL_FLUSH = 1
 
         attr_accessor :host, :port, :events
 
