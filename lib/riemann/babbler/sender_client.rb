@@ -52,9 +52,11 @@ module Riemann
 
         # flush events
         def flush
-          @riemann << @events
-          log :debug, "Posted event (#{@host}:#{@port}): #{events.inspect}"
-          @events.clear
+          unless @events.empty?
+            @riemann << @events
+            log :debug, "Posted events via (#{@host}:#{@port}): #{events.inspect}"
+            @events.clear
+          end
         end
 
         # riemann client

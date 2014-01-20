@@ -1,5 +1,5 @@
 module Riemann
-  module Repin
+  module Babbler
     class Message
       include Beefcake::Message
 
