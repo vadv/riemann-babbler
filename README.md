@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/vadv/riemann-babbler.png)](https://travis-ci.org/vadv/riemann-babbler)
 
+# Unsupported, use [kurchatov](https://github.com/vadv/kurchatov)
+
 ### Install
 ```
 gem install riemann-babbler
